@@ -1,0 +1,6 @@
+<div class="d-flex align-items-center justify-content-center">
+    <p>{{ (systemLoad$ | async)?.oneMinute }}
+        {{ (systemLoad$ | async)?.fiveMinutes }}
+        {{ (systemLoad$ | async)?.fifteenMinutes }}
+    </p>
+</div>
