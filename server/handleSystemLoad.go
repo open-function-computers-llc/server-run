@@ -1,7 +1,6 @@
 package server
 
 import (
-	"encoding/json"
 	"net/http"
 	"os/exec"
 	"strings"
@@ -30,11 +29,6 @@ func (s *Server) handleSystemLoad() http.HandlerFunc {
 		output.FiveMinutes = loadParts[1]
 		output.FifteenMinutes = strings.TrimSpace(loadParts[2])
 
-		bytes, err := json.Marshal(output)
-		if err != nil {
-			// ...
-		}
-
-		w.Write(bytes)
+		sendJSON(w, output)
 	}
 }

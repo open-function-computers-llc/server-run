@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SystemLoad } from './SystemLoad';
 import { interval, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+import { Website } from './Website';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +14,10 @@ export class ServerService {
     private http: HttpClient,
   ) { }
 
-  systemLoadURL = "/api/system-load";
-
   getSystemLoad() : Observable<SystemLoad> {
     return interval(5000).pipe(
              mergeMap(() => {
-                return this.http.get<SystemLoad>(this.systemLoadURL).
+                return this.http.get<SystemLoad>("/api/system-load").
                   pipe(
                     catchError(this.handleError<SystemLoad>('get-system-load', {
                       oneMinute: "error",
@@ -28,6 +27,25 @@ export class ServerService {
                   )
               })
     );
+  }
+
+  getSites() : Observable<Website[]> {
+    return this.http.get<Website[]>("/api/sites").
+      pipe(
+        catchError(this.handleError<Website[]>('get-sites', []))
+      )
+  }
+
+  getSiteDetails(d:string) : Observable<Website> {
+    return this.http.get<Website>("/api/details?domain="+d).
+      pipe(
+        catchError(this.handleError<Website>('get-details', {
+          domain: d,
+          isLocked: false,
+          alternateDomains: [],
+          uptimeURI: "",
+        }))
+      )
   }
 
   /**

@@ -1,0 +1,15 @@
+@import "../scss/variables.scss";
+
+.main {
+    display: flex;
+    min-height: calc(100vh - 110px);
+
+    .main-sidebar {
+        width: 300px;
+        background-color: $c-darkGrey;
+    }
+
+    .main-sidebar, .content-wrapper {
+        padding: $grid-gutter-width * 0.5 0;
+    }
+}

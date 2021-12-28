@@ -1,0 +1,7 @@
+<h2>Sites on this server:</h2>
+
+<ul>
+    <li *ngFor="let site of sites$ | async;">
+        <a routerLink="/details/{{ site.domain }}">{{ site.domain }}</a>
+    </li>
+</ul>
