@@ -1,1 +1,15 @@
-<p>login works!</p>
+<h1>Login:</h1>
+
+<form (ngSubmit)="onSubmit(LoginForm)" #LoginForm="ngForm">
+    <div class="mb-3">
+        <label for="user" class="form-label">Username</label>
+        <input type="text" class="form-control" id="user" name="user" ngModel autofocus tabindex="0" />
+    </div>
+    <div class="mb-3">
+        <label for="pass" class="form-label">Password</label>
+        <input type="password" class="form-control" id="pass" name="pass" ngModel />
+    </div>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary mb-3">Submit</button>
+    </div>
+</form>

@@ -1,15 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './auth/auth.guard';
+import { ErrorComponent } from './error/error.component';
 import { DetailsComponent } from './pages/details/details.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { SitesComponent } from './pages/sites/sites.component';
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent },
-  { path: 'sites', component: SitesComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'details/:domain', component:DetailsComponent },
+  { path: '', redirectTo: '/system/home', pathMatch: 'full' },
+  { path: 'system', canActivate: [AuthGuard], children:[
+    { path: 'home', component: HomeComponent },
+    { path: 'sites', component: SitesComponent },
+    { path: 'details/:domain', component: DetailsComponent },
+  ]},
+  { path: '**', component: ErrorComponent },
 ];
 
 @NgModule({

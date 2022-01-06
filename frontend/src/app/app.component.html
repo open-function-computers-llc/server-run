@@ -1,7 +1,7 @@
 <app-header></app-header>
 <section class="main">
   <aside class="main-sidebar">
-    <app-sidebar></app-sidebar>
+    <app-sidebar *ngIf="isLoggedIn"></app-sidebar>
   </aside>
   <div class="content-wrapper">
     <div class="container-fluid">

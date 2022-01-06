@@ -1,6 +1,6 @@
-<div class="d-flex align-items-center justify-content-center">
-    <p>{{ (systemLoad$ | async)?.oneMinute }}
-        {{ (systemLoad$ | async)?.fiveMinutes }}
-        {{ (systemLoad$ | async)?.fifteenMinutes }}
+<div class="d-flex align-items-center justify-content-center" *ngIf="systemLoad | async as sl">
+    <p>{{ sl.oneMinute }}
+        {{ sl.fiveMinutes }}
+        {{ sl.fifteenMinutes }}
     </p>
 </div>

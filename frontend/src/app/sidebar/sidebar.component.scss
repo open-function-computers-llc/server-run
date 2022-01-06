@@ -1,0 +1,28 @@
+
+a {
+    color: white;
+    text-decoration: none;
+    position: relative;
+    padding-left: 0;
+    transition: padding 0.5s ease;
+
+    &:before {
+        content: "»";
+        position: absolute;
+        left: 0%;
+        width: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: all 0.5s ease;
+    }
+
+    &.active {
+        font-weight: bold;
+        padding-left: 15px;
+
+        &:before {
+            width: 20px;
+            opacity: 1;
+        }
+    }
+}

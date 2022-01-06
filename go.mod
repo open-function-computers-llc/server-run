@@ -8,4 +8,8 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 )
 
-require golang.org/x/sys v0.0.0-20210917161153-d61c044b1678 // indirect
+require (
+	github.com/klauspost/compress v1.10.3 // indirect
+	golang.org/x/sys v0.0.0-20210917161153-d61c044b1678 // indirect
+	nhooyr.io/websocket v1.8.7 // indirect
+)

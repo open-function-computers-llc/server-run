@@ -7,13 +7,24 @@ import (
 func (s *Server) bindRoutes() {
 	// API routes
 	protectedRoutes := map[string]http.HandlerFunc{
-		"system-load": s.handleSystemLoad(),
-		"sites":       s.handleSites(),
-		"details":     s.handleDetails(),
+		"sites":     s.handleSites(),
+		"details":   s.handleDetails(),
+		"analytics": s.handleAnalytics(),
 	}
 	for path, handler := range protectedRoutes {
 		http.Handle("/api/"+path, s.LogRequest(s.ProtectRequest(handler)))
 	}
+
+	// web socket routes
+	protectedStreamRoutes := map[string]http.HandlerFunc{
+		"system-load": s.streamSystemLoad(),
+		"script":      s.streamScriptRunner(),
+	}
+	for path, handler := range protectedStreamRoutes {
+		http.Handle("/stream/"+path, s.LogRequest(s.ProtectRequest(handler)))
+	}
+
+	// no auth needed
 	openRoutes := map[string]http.HandlerFunc{
 		"auth": s.handleAuth(),
 	}

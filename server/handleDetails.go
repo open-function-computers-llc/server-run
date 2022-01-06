@@ -24,6 +24,9 @@ func (s *Server) handleDetails() http.HandlerFunc {
 			return
 		}
 
+		// reload the status each time the page is requested
+		site.LoadStatus()
+
 		sendJSON(w, site)
 	}
 }

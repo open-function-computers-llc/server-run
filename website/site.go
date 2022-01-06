@@ -3,7 +3,6 @@ package website
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"os"
 )
 
@@ -37,7 +36,7 @@ func (s *Site) LoadStatus() error {
 
 func verifyExists(folderName, fileName string) {
 	// check folder
-	folderPath := os.Getenv("CONFIG_FILE_ROOT") + "/" + folderName
+	folderPath := os.Getenv("ACCOUNTS_ROOT") + folderName
 	_, err := os.Stat(folderPath)
 	if err != nil {
 		os.Mkdir(folderPath, 0755)
@@ -49,7 +48,7 @@ func verifyExists(folderName, fileName string) {
 		data := settings{
 			Domain: folderName,
 			AlwaysUnlockedDirectories: []string{
-				os.Getenv("WEBSITES_ROOT") + "/" + folderName + "/uploads", // uploads directory is always flagged as g2g
+				os.Getenv("WEBSITES_ROOT") + folderName + "/uploads", // uploads directory is always flagged as g2g
 			},
 		}
 
@@ -62,8 +61,8 @@ func verifyExists(folderName, fileName string) {
 }
 
 func (s *Site) hydrateData() error {
-	directory := os.Getenv("CONFIG_FILE_ROOT")
-	status, err := ioutil.ReadFile(directory + "/" + s.Domain + "/settings.json")
+	directory := os.Getenv("ACCOUNTS_ROOT")
+	status, err := os.ReadFile(directory + s.Domain + "/settings.json")
 	if err != nil {
 		return err
 	}

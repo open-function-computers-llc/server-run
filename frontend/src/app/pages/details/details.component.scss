@@ -1,0 +1,6 @@
+@import "../../../scss/variables.scss";
+
+iframe {
+    width: calc(100vw - 300px - $grid-gutter-width);
+    height: 600px;
+}

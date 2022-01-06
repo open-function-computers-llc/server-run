@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SystemLoad } from './SystemLoad';
 import { interval, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+import { catchError, mergeMap } from 'rxjs/operators';
 import { Website } from './Website';
+import { webSocket } from "rxjs/webSocket";
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +15,27 @@ export class ServerService {
     private http: HttpClient,
   ) { }
 
+  getHeaders() {
+    const localInfo = JSON.parse(localStorage.getItem("ofco-auth") || "");
+    const token = localInfo.authToken || "";
+    return new HttpHeaders().set("Authorization", token);
+  }
+
+  getToken() : string {
+    const localInfo = JSON.parse(localStorage.getItem("ofco-auth") || "");
+    return localInfo.authToken || "";
+  }
+
+  streamSystemLoad() : Observable<SystemLoad> {
+    const base = window.location.href.split('/').slice(0, 3).join('/') + "/"
+    const subject = webSocket<SystemLoad>(base.replace("http", "ws") + "stream/system-load?token="+this.getToken());
+    return subject;
+  }
+
   getSystemLoad() : Observable<SystemLoad> {
-    return interval(5000).pipe(
+    return interval(500).pipe(
              mergeMap(() => {
-                return this.http.get<SystemLoad>("/api/system-load").
+                return this.http.get<SystemLoad>("/api/system-load", {headers: this.getHeaders()}).
                   pipe(
                     catchError(this.handleError<SystemLoad>('get-system-load', {
                       oneMinute: "error",
@@ -30,14 +48,14 @@ export class ServerService {
   }
 
   getSites() : Observable<Website[]> {
-    return this.http.get<Website[]>("/api/sites").
+    return this.http.get<Website[]>("/api/sites", {headers: this.getHeaders()}).
       pipe(
         catchError(this.handleError<Website[]>('get-sites', []))
       )
   }
 
   getSiteDetails(d:string) : Observable<Website> {
-    return this.http.get<Website>("/api/details?domain="+d).
+    return this.http.get<Website>("/api/details?domain="+d, {headers: this.getHeaders()}).
       pipe(
         catchError(this.handleError<Website>('get-details', {
           domain: d,

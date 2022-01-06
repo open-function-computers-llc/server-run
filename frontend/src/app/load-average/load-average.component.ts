@@ -9,14 +9,15 @@ import { SystemLoad } from '../SystemLoad';
   styleUrls: ['./load-average.component.scss']
 })
 export class LoadAverageComponent implements OnInit {
-  systemLoad$! : Observable<SystemLoad>;
+  systemLoad : Observable<SystemLoad>;
 
   constructor(
     private serverService: ServerService,
   ) { }
 
   ngOnInit(): void {
-    this.systemLoad$ = this.serverService.getSystemLoad().pipe(share())
+    // this.systemLoad = this.serverService.getSystemLoad();
+    this.systemLoad = this.serverService.streamSystemLoad();
   }
 
 }

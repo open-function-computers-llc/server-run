@@ -10,7 +10,12 @@
                         <p>Server Maintenance</p>
                     </div>
 
-                    <app-load-average></app-load-average>
+                    <div class="d-flex align-items-center">
+                        <app-load-average *ngIf="isLoggedIn"></app-load-average>
+                        <a *ngIf="isLoggedIn" (click)="logout();">
+                            <i-bs name="box-arrow-right"></i-bs>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

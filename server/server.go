@@ -1,13 +1,13 @@
 package server
 
 import (
+	"errors"
 	"io/fs"
 	"net/http"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/open-function-computers-llc/server-run/website"
 	"github.com/sirupsen/logrus"
@@ -19,16 +19,14 @@ type Server struct {
 	port       int
 	sites      []website.Site
 	sessions   map[string]session
+	adminUser  string
+	adminPass  string
 }
 
 func New(filesystem fs.FS) (*Server, error) {
 	s := Server{
-		logger: logrus.New(),
-		sessions: map[string]session{
-			"asdf": session{
-				expires: time.Now().Add(time.Minute * 1),
-			},
-		},
+		logger:     logrus.New(),
+		sessions:   map[string]session{},
 		filesystem: filesystem,
 	}
 
@@ -38,8 +36,18 @@ func New(filesystem fs.FS) (*Server, error) {
 	}
 	s.port = port
 
+	s.adminUser = os.Getenv("AUTHUSER")
+	s.adminPass = os.Getenv("AUTHPASSWORD")
+
 	s.bindRoutes()
-	s.bootstrapSites()
+	err = s.bootstrapSites()
+	if err != nil {
+		return &s, err
+	}
+
+	if s.adminPass == "" || s.adminUser == "" {
+		return &s, errors.New("AUTHUSER and AUTHPASSWORD are required env vars")
+	}
 
 	return &s, nil
 }
@@ -64,6 +72,11 @@ func (s *Server) bootstrapSites() error {
 		if err != nil {
 			return err
 		}
+		err = site.LoadStatus()
+		if err != nil {
+			return err
+		}
+
 		s.sites = append(s.sites, site)
 	}
 
