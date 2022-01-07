@@ -16,7 +16,6 @@ export class LoadAverageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // this.systemLoad = this.serverService.getSystemLoad();
     this.systemLoad = this.serverService.streamSystemLoad();
   }
 

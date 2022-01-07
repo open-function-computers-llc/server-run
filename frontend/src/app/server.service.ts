@@ -32,21 +32,6 @@ export class ServerService {
     return subject;
   }
 
-  getSystemLoad() : Observable<SystemLoad> {
-    return interval(500).pipe(
-             mergeMap(() => {
-                return this.http.get<SystemLoad>("/api/system-load", {headers: this.getHeaders()}).
-                  pipe(
-                    catchError(this.handleError<SystemLoad>('get-system-load', {
-                      oneMinute: "error",
-                      fiveMinutes: "error",
-                      fifteenMinutes: "error",
-                    }))
-                  )
-              })
-    );
-  }
-
   getSites() : Observable<Website[]> {
     return this.http.get<Website[]>("/api/sites", {headers: this.getHeaders()}).
       pipe(

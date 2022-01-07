@@ -13,6 +13,9 @@ import { DetailsComponent } from './pages/details/details.component';
 import { FormsModule } from '@angular/forms';
 import { ErrorComponent } from './error/error.component';
 import { NgxBootstrapIconsModule, allIcons } from 'ngx-bootstrap-icons';
+import { AuthService } from './auth/auth.service';
+import { AuthGuard } from './auth/auth.guard';
+import { SafeUrlPipePipe } from './pipes/safe-url-pipe.pipe';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,8 @@ import { NgxBootstrapIconsModule, allIcons } from 'ngx-bootstrap-icons';
     LoginComponent,
     SitesComponent,
     DetailsComponent,
-    ErrorComponent
+    ErrorComponent,
+    SafeUrlPipePipe,
   ],
   imports: [
     BrowserModule,
@@ -33,7 +37,10 @@ import { NgxBootstrapIconsModule, allIcons } from 'ngx-bootstrap-icons';
     FormsModule,
     NgxBootstrapIconsModule.pick(allIcons)
   ],
-  providers: [],
+  providers: [
+    AuthService,
+    AuthGuard,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

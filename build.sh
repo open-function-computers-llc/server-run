@@ -3,10 +3,10 @@
 # kill any currently running version of the app
 killall server-run
 
-# cd frontend
-# # npm install
-# ng build
-# cd ..
+cd frontend
+# npm install
+ng build
+cd ..
 
 # build and run the new binary
 if [[ "$OSTYPE" == "linux-gnu" ]]; then

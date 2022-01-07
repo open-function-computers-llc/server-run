@@ -19,7 +19,7 @@ header {
     a {
         color: white;
         text-decoration: underline;
-        margin-left: $grid-gutter-width / 2;
+        margin-left: $grid-gutter-width * 0.5;
         cursor: pointer;
     }
 }

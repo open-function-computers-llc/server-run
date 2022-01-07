@@ -1,14 +1,14 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { Subject } from "rxjs";
+import { BehaviorSubject, Subject } from "rxjs";
 import { take } from "rxjs/operators";
 import { AuthResponse } from "./AuthResponse";
 import { User } from "./user.model";
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class AuthService {
-    user = new Subject<User|null>();
+    user = new BehaviorSubject<User|null>(null);
 
     constructor(
         private http: HttpClient,
@@ -20,9 +20,7 @@ export class AuthService {
         body.append("user", username);
         body.append("pass", password);
 
-        this.http.post<AuthResponse>("/api/auth", body, {
-            headers: {},
-        }).pipe(
+        this.http.post<AuthResponse>("/api/auth", body).pipe(
             take(1),
         ).subscribe({
             next: (v) => {
