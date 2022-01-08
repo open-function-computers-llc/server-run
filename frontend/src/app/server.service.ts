@@ -5,6 +5,7 @@ import { interval, Observable, of } from 'rxjs';
 import { catchError, mergeMap } from 'rxjs/operators';
 import { Website } from './Website';
 import { webSocket } from "rxjs/webSocket";
+import { ScriptMessage } from './ScriptMessage';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,12 @@ export class ServerService {
   streamSystemLoad() : Observable<SystemLoad> {
     const base = window.location.href.split('/').slice(0, 3).join('/') + "/"
     const subject = webSocket<SystemLoad>(base.replace("http", "ws") + "stream/system-load?token="+this.getToken());
+    return subject;
+  }
+
+  streamScriptProcess(script: string, domain: string) : Observable<ScriptMessage> {
+    const base = window.location.href.split('/').slice(0, 3).join('/') + "/"
+    const subject = webSocket<ScriptMessage>(base.replace("http", "ws") + "stream/script?token=" + this.getToken() + "&script=" + script + "&domain=" + domain);
     return subject;
   }
 

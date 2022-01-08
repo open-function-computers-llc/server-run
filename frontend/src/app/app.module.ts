@@ -16,6 +16,7 @@ import { NgxBootstrapIconsModule, allIcons } from 'ngx-bootstrap-icons';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/auth.guard';
 import { SafeUrlPipePipe } from './pipes/safe-url-pipe.pipe';
+import { ProcessComponent } from './pages/process/process.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { SafeUrlPipePipe } from './pipes/safe-url-pipe.pipe';
     DetailsComponent,
     ErrorComponent,
     SafeUrlPipePipe,
+    ProcessComponent,
   ],
   imports: [
     BrowserModule,

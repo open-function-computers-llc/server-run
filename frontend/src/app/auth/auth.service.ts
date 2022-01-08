@@ -35,4 +35,13 @@ export class AuthService {
         });
     }
 
+    autoLogin() {
+        const localInfo = JSON.parse(localStorage.getItem("ofco-auth") || "");
+        const token = localInfo.authToken || "";
+        const expiresAt = new Date(localInfo.expiresAt);
+
+        const user = new User(token, expiresAt);
+        this.user.next(user);
+    }
+
 }

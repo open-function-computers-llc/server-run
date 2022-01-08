@@ -1,0 +1,10 @@
+<h3>Processing...</h3>
+<p><strong>Action:</strong> {{ action }} for {{ domain }}</p>
+
+<div class="script-output">
+    <ul>
+        <li *ngFor="let m of messages">{{ m }}</li>
+    </ul>
+</div>
+
+<a *ngIf="isComplete" (click)="return()">Go Back</a>

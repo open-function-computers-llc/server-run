@@ -2,6 +2,6 @@
 
 <ul>
     <li *ngFor="let site of sites$ | async;">
-        <a routerLink="/system/details/{{ site.domain }}">{{ site.domain }}</a>
+        <a routerLink="/system/sites/{{ site.domain }}">{{ site.domain }}</a>
     </li>
 </ul>

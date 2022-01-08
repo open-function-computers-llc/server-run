@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
-import { Observable, of, share } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, share } from 'rxjs';
 import { ServerService } from 'src/app/server.service';
 import { Website } from 'src/app/Website';
 
@@ -19,13 +18,13 @@ export class DetailsComponent implements OnInit {
   constructor(
     private serverService: ServerService,
     private route: ActivatedRoute,
-    private sanitizer: DomSanitizer
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
     const domain:string = this.route.snapshot.paramMap.get("domain") || "";
     this.domain = domain;
-    this.site = this.serverService.getSiteDetails(domain).pipe(share());
+    this.site = this.serverService.getSiteDetails(domain);
     this.setAnalyticsURL();
   }
 
@@ -39,6 +38,16 @@ export class DetailsComponent implements OnInit {
     console.log(e.target.value);
     this.analyticsView = e.target.value;
     this.setAnalyticsURL();
+  }
+
+  unlockSite() {
+    console.log("unlock!")
+    this.router.navigate(['process', 'unlock'], { relativeTo: this.route });
+  }
+
+  lockSite() {
+    console.log("lock!")
+    this.router.navigate(['process', 'lock'], { relativeTo: this.route });
   }
 
 }

@@ -5,6 +5,7 @@ import { ErrorComponent } from './error/error.component';
 import { DetailsComponent } from './pages/details/details.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
+import { ProcessComponent } from './pages/process/process.component';
 import { SitesComponent } from './pages/sites/sites.component';
 
 const routes: Routes = [
@@ -13,7 +14,8 @@ const routes: Routes = [
   { path: 'system', canActivate: [AuthGuard], children:[
     { path: 'home', component: HomeComponent },
     { path: 'sites', component: SitesComponent },
-    { path: 'details/:domain', component: DetailsComponent },
+    { path: 'sites/:domain', component: DetailsComponent },
+    { path: 'sites/:domain/process/:action', component: ProcessComponent },
   ]},
   { path: '**', component: ErrorComponent },
 ];

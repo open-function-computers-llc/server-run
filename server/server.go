@@ -14,13 +14,14 @@ import (
 )
 
 type Server struct {
-	logger     *logrus.Logger
-	filesystem fs.FS
-	port       int
-	sites      []website.Site
-	sessions   map[string]session
-	adminUser  string
-	adminPass  string
+	logger      *logrus.Logger
+	filesystem  fs.FS
+	port        int
+	sites       []website.Site
+	sessions    map[string]session
+	adminUser   string
+	adminPass   string
+	scriptsRoot string
 }
 
 func New(filesystem fs.FS) (*Server, error) {
@@ -36,10 +37,20 @@ func New(filesystem fs.FS) (*Server, error) {
 	}
 	s.port = port
 
+	s.scriptsRoot = os.Getenv("SCRIPTS_ROOT")
+	if s.scriptsRoot == "" || s.scriptsRoot[len(s.scriptsRoot)-1:] != "/" {
+		return &s, errors.New("Invalid location for SCRIPTS_ROOT. Don't forget the trailing slash.")
+	}
+	_, err = os.Stat(s.scriptsRoot)
+	if os.IsNotExist(err) {
+		return &s, errors.New("SCRIPTS_ROOT directory does not exist or is not readable: " + err.Error())
+	}
+
 	s.adminUser = os.Getenv("AUTHUSER")
 	s.adminPass = os.Getenv("AUTHPASSWORD")
 
 	s.bindRoutes()
+
 	err = s.bootstrapSites()
 	if err != nil {
 		return &s, err
