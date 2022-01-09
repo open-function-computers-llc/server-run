@@ -46,8 +46,11 @@ func New(filesystem fs.FS) (*Server, error) {
 		return &s, errors.New("SCRIPTS_ROOT directory does not exist or is not readable: " + err.Error())
 	}
 
-	s.adminUser = os.Getenv("AUTHUSER")
-	s.adminPass = os.Getenv("AUTHPASSWORD")
+	s.adminUser = os.Getenv("AUTH_USER")
+	s.adminPass = os.Getenv("AUTH_PASSWORD")
+	if len(s.adminPass) < 8 || s.adminUser == "" {
+		return &s, errors.New("Invalid admin user/pass credentials. Password must be at least 8 characters.")
+	}
 
 	s.bindRoutes()
 
