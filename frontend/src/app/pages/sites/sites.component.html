@@ -1,7 +1,9 @@
 <h2>Sites on this server:</h2>
 
-<ul>
-    <li *ngFor="let site of sites$ | async;">
-        <a routerLink="/system/sites/{{ site.domain }}">{{ site.domain }}</a>
+<ul class="list-group">
+    <li *ngFor="let site of sites$ | async;" class="list-group-item d-flex" [class]="{ 'list-group-item-success': site.isLocked, 'list-group-item-danger': !site.isLocked }">
+        <i-bs name="lock-fill" *ngIf="site.isLocked"></i-bs>
+        <i-bs name="unlock-fill" *ngIf="!site.isLocked"></i-bs>
+        <a class="mx-3 d-block" routerLink="/system/sites/{{ site.domain }}">{{ site.domain }}</a>
     </li>
 </ul>

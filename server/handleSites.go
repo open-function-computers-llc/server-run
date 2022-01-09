@@ -6,6 +6,7 @@ import (
 
 func (s *Server) handleSites() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		s.bootstrapSites()
 		sendJSON(w, s.sites)
 	}
 }
