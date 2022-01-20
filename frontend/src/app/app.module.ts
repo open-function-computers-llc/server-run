@@ -17,6 +17,8 @@ import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/auth.guard';
 import { SafeUrlPipePipe } from './pipes/safe-url-pipe.pipe';
 import { ProcessComponent } from './pages/process/process.component';
+import { UptimeComponent } from './uptime/uptime.component';
+import { UptimeService } from './uptime/uptime.service';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,7 @@ import { ProcessComponent } from './pages/process/process.component';
     ErrorComponent,
     SafeUrlPipePipe,
     ProcessComponent,
+    UptimeComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,6 +45,7 @@ import { ProcessComponent } from './pages/process/process.component';
   providers: [
     AuthService,
     AuthGuard,
+    UptimeService,
   ],
   bootstrap: [AppComponent]
 })

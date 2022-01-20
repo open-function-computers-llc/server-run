@@ -96,3 +96,14 @@ func (s *Server) bootstrapSites() error {
 
 	return nil
 }
+
+func (s *Server) findSiteByDomain(d string) (website.Site, error) {
+	for _, website := range s.sites {
+		if website.Domain == d {
+			return website, nil
+		}
+	}
+
+	// no website was found
+	return website.Site{}, errors.New("Invalid Domain")
+}

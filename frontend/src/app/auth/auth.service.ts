@@ -41,7 +41,14 @@ export class AuthService {
         const expiresAt = new Date(localInfo.expiresAt);
 
         const user = new User(token, expiresAt);
-        this.user.next(user);
+        if (user.token) {
+            this.user.next(user);
+        }
+    }
+
+    logout() {
+        this.user.next(null);
+        localStorage.removeItem("ofco-auth");
     }
 
 }

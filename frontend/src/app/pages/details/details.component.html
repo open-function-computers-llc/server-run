@@ -1,11 +1,18 @@
 <a routerLink="/system/sites">Back to all sites</a>
 
 <ng-container *ngIf="site | async as s">
-    <h1>
-        <i-bs name="lock-fill" width="2rem" height="2rem" *ngIf="s.isLocked"></i-bs>
-        <i-bs name="unlock-fill" width="2rem" height="2rem" *ngIf="!s.isLocked"></i-bs>
-        {{ s.domain }}
-    </h1>
+    <div class="d-flex justify-content-between">
+        <h1>
+            <i-bs name="lock-fill" width="2rem" height="2rem" *ngIf="s.isLocked"></i-bs>
+            <i-bs name="unlock-fill" width="2rem" height="2rem" *ngIf="!s.isLocked"></i-bs>
+            {{ s.domain }}
+        </h1>
+
+        <app-uptime
+            [uptimeURI]="s.uptimeURI"
+            [domain]="s.domain"
+            class="d-flex flex-column align-items-end"></app-uptime>
+    </div>
     <button (click)="unlockSite()" class="btn btn-primary" *ngIf="s.isLocked">
         <i-bs name="unlock-fill" width="2rem" height="2rem" *ngIf="!s.isLocked"></i-bs>
         Unlock

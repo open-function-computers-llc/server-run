@@ -6,6 +6,7 @@ import { catchError, mergeMap } from 'rxjs/operators';
 import { Website } from './Website';
 import { webSocket } from "rxjs/webSocket";
 import { ScriptMessage } from './ScriptMessage';
+import { AuthService } from './auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class ServerService {
 
   constructor(
     private http: HttpClient,
+    private authService: AuthService,
   ) { }
 
   getHeaders() {
@@ -70,6 +72,7 @@ export class ServerService {
       // TODO: send the error to remote logging infrastructure
       console.log(operation);
       console.error(error); // log to console instead
+      this.authService.logout();
 
       // Let the app keep running by returning an empty result.
       return of(result as T);

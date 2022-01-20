@@ -6,11 +6,14 @@ import (
 	"os"
 )
 
+var stateFilename = "settings.json"
+
 type Site struct {
 	IsLocked         bool     `json:"isLocked"`
 	Domain           string   `json:"domain"`
 	AlternateDomains []string `json:"alternateDomains"`
 	UptimeURI        string   `json:"uptimeURI"`
+	Username         string   `json:"username"`
 }
 
 func New(domain string) (Site, error) {
@@ -28,36 +31,46 @@ func (s *Site) LoadStatus() error {
 		return errors.New("Can't load status for an empty domain")
 	}
 
-	verifyExists(s.Domain, "settings.json")
-	err := s.hydrateData()
-
-	return err
+	s.verifyStateFileExists()
+	return s.hydrateData()
 }
 
-func verifyExists(folderName, fileName string) {
+func (s *Site) stateFolder() string {
+	return os.Getenv("ACCOUNTS_ROOT") + s.Domain
+}
+
+func (s *Site) stateFilePath() string {
+	return s.stateFolder() + "/" + stateFilename
+}
+
+func (s *Site) verifyStateFileExists() {
 	// check folder
-	folderPath := os.Getenv("ACCOUNTS_ROOT") + folderName
-	_, err := os.Stat(folderPath)
+	_, err := os.Stat(s.stateFolder())
 	if err != nil {
-		os.Mkdir(folderPath, 0755)
+		os.Mkdir(s.stateFolder(), 0755)
 	}
 
 	// check file
-	_, err = os.Stat(folderPath + "/" + fileName)
+	_, err = os.Stat(s.stateFilePath())
 	if err != nil {
 		data := settings{
-			Domain: folderName,
+			Domain: s.Domain,
 			AlwaysUnlockedDirectories: []string{
-				os.Getenv("WEBSITES_ROOT") + folderName + "/uploads", // uploads directory is always flagged as g2g
+				os.Getenv("WEBSITES_ROOT") + s.Domain + "/uploads", // uploads directory is always flagged as g2g
 			},
 		}
 
 		// TODO: juggle the different server types to hydrate the default unlocked directories
 
 		json, _ := json.Marshal(data)
-		file, _ := os.Create(folderPath + "/" + fileName)
+		file, _ := os.Create(s.stateFilePath())
 		file.WriteString(string(json))
 	}
+}
+
+func (s *Site) saveStateFile() error {
+	json, _ := json.Marshal(s)
+	return os.WriteFile(s.stateFilePath(), json, 0644)
 }
 
 func (s *Site) hydrateData() error {

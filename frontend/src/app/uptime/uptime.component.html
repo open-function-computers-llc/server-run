@@ -1,0 +1,44 @@
+<p *ngIf="!uptimeAvailable">Uptime monitoring is not available.</p>
+
+<ng-container *ngIf="uptimeURI == ''">
+    <p>Invalid URI for uptime monitoring.</p>
+</ng-container>
+
+<ng-container *ngIf="uptimeAvailable">
+    <div *ngIf="!isUpdatingURI; else showForm" class="d-flex align-items-center mb-3">
+        <p class="mb-0 me-2">Uptime monitoring for: {{ uptimeURI }}</p>
+        <button class="btn btn-primary btn-sm" (click)="toggleForm()">Update</button>
+    </div>
+
+    <ng-template #showForm>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">URI</span>
+            <input type="text" class="form-control" placeholder="Uptime URI" [(ngModel)]="uptimeURI" />
+        </div>
+        <button class="btn btn-danger" (click)="toggleForm()">Cancel</button>
+        <button class="btn btn-success" (click)="updateUptimeURI()">Update</button>
+    </ng-template>
+</ng-container>
+
+<ng-container *ngIf="uptimeURI !== '' && uptimeAvailable && !isUpdatingURI">
+    <ng-container *ngIf="uptimeInfo | async as info">
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item d-flex flex-column" [class]="{'list-group-item-success': info.uptime.days1 > 0.99 }">
+                <small>Day</small>
+                {{ info.uptime.days1 | percent:'2.1-2' }}
+            </li>
+            <li class="list-group-item d-flex flex-column" [class]="{'list-group-item-success': info.uptime.days7 > 0.99 }">
+                <small>Week</small>
+                {{ info.uptime.days7 | percent:'2.1-2' }}
+            </li>
+            <li class="list-group-item d-flex flex-column" [class]="{'list-group-item-success': info.uptime.days30 > 0.99 }">
+                <small>Month</small>
+                {{ info.uptime.days30 | percent:'2.1-2' }}
+            </li>
+            <li class="list-group-item d-flex flex-column" [class]="{'list-group-item-success': info.uptime.days90 > 0.99 }">
+                <small>Quarter</small>
+                {{ info.uptime.days90 | percent:'2.1-2' }}
+            </li>
+        </ul>
+    </ng-container>
+</ng-container>

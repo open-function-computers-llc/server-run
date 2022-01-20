@@ -7,9 +7,12 @@ import (
 func (s *Server) bindRoutes() {
 	// API routes
 	protectedRoutes := map[string]http.HandlerFunc{
-		"sites":     s.handleSites(),
-		"details":   s.handleDetails(),
-		"analytics": s.handleAnalytics(),
+		"sites":           s.handleSites(),
+		"details":         s.handleDetails(),
+		"update":          s.handleUpdateSite(),
+		"analytics":       s.handleAnalytics(),
+		"uptime":          s.handleUptimeInfo(),
+		"uptime-provider": s.handleUptimeDetails(),
 	}
 	for path, handler := range protectedRoutes {
 		http.Handle("/api/"+path, s.LogRequest(s.ProtectRequest(handler)))
