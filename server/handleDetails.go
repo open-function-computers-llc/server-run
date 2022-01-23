@@ -10,16 +10,16 @@ func (s *Server) handleDetails() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 
-		d := r.FormValue("domain")
+		d := r.FormValue("domain") // TODO: switch this in ANGULAR to "account"
 		site := website.Site{}
 
 		for _, s := range s.sites {
-			if s.Domain == d {
+			if s.Account == d {
 				site = s
 			}
 		}
 
-		if site.Domain == "" {
+		if site.Account == "" {
 			// handle error
 			return
 		}

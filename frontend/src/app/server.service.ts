@@ -52,7 +52,7 @@ export class ServerService {
     return this.http.get<Website>("/api/details?domain="+d, {headers: this.getHeaders()}).
       pipe(
         catchError(this.handleError<Website>('get-details', {
-          domain: d,
+          account: d,
           isLocked: false,
           alternateDomains: [],
           uptimeURI: "",

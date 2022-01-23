@@ -5,8 +5,8 @@ import { Website } from 'src/app/Website';
 
 @Component({
   selector: 'app-sites',
-  templateUrl: './sites.component.html',
-  styleUrls: ['./sites.component.scss']
+  templateUrl: './accounts.component.html',
+  styleUrls: ['./accounts.component.scss']
 })
 export class SitesComponent implements OnInit {
   sites$!: Observable<Website[]>;

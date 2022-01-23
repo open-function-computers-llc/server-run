@@ -1,9 +1,9 @@
-<h2>Sites on this server:</h2>
+<h2>Accounts on this server:</h2>
 
 <ul class="list-group">
     <li *ngFor="let site of sites$ | async;" class="list-group-item d-flex" [class]="{ 'list-group-item-success': site.isLocked, 'list-group-item-danger': !site.isLocked }">
         <i-bs name="lock-fill" *ngIf="site.isLocked"></i-bs>
         <i-bs name="unlock-fill" *ngIf="!site.isLocked"></i-bs>
-        <a class="mx-3 d-block" routerLink="/system/sites/{{ site.domain }}">{{ site.domain }}</a>
+        <a class="mx-3 d-block" routerLink="/system/accounts/{{ site.account }}">{{ site.account }}</a>
     </li>
 </ul>

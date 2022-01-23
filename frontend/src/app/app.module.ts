@@ -8,7 +8,7 @@ import { LoadAverageComponent } from './load-average/load-average.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
-import { SitesComponent } from './pages/sites/sites.component';
+import { SitesComponent } from './pages/accounts/accounts.component';
 import { DetailsComponent } from './pages/details/details.component';
 import { FormsModule } from '@angular/forms';
 import { ErrorComponent } from './error/error.component';

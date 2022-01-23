@@ -8,10 +8,10 @@ func (s *Server) handleUpdateSite() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		r.ParseMultipartForm(1024)
 
-		d := r.PostFormValue("domain")
+		d := r.PostFormValue("domain") // TODO: switch this in ANGULAR to "account"
 		uri := r.PostFormValue("uri")
 
-		site, err := s.findSiteByDomain(d)
+		site, err := s.findAccountByName(d)
 		if err != nil {
 			sendJSONError(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
 			return

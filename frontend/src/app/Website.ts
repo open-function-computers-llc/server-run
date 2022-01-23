@@ -1,6 +1,6 @@
 export interface Website {
     isLocked: boolean;
-    domain: string;
+    account: string;
     alternateDomains: string[];
     uptimeURI: string;
 }

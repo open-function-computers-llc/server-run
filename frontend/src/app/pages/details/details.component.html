@@ -1,16 +1,16 @@
-<a routerLink="/system/sites">Back to all sites</a>
+<a routerLink="/system/accounts">Back to all accounts</a>
 
 <ng-container *ngIf="site | async as s">
     <div class="d-flex justify-content-between">
         <h1>
             <i-bs name="lock-fill" width="2rem" height="2rem" *ngIf="s.isLocked"></i-bs>
             <i-bs name="unlock-fill" width="2rem" height="2rem" *ngIf="!s.isLocked"></i-bs>
-            {{ s.domain }}
+            {{ s.account }}
         </h1>
 
         <app-uptime
             [uptimeURI]="s.uptimeURI"
-            [domain]="s.domain"
+            [domain]="s.account"
             class="d-flex flex-column align-items-end"></app-uptime>
     </div>
     <button (click)="unlockSite()" class="btn btn-primary" *ngIf="s.isLocked">
