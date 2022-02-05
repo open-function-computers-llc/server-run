@@ -97,13 +97,13 @@ func (s *Server) bootstrapSites() error {
 	return nil
 }
 
-func (s *Server) findSiteByDomain(d string) (website.Site, error) {
+func (s *Server) findAccountByName(a string) (website.Site, error) {
 	for _, website := range s.sites {
-		if website.Domain == d {
+		if website.Account == a {
 			return website, nil
 		}
 	}
 
 	// no website was found
-	return website.Site{}, errors.New("Invalid Domain")
+	return website.Site{}, errors.New("Invalid Account Name")
 }

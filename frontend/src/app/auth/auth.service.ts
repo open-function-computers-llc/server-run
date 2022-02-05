@@ -37,7 +37,7 @@ export class AuthService {
 
     autoLogin() {
         const localInfo = JSON.parse(localStorage.getItem("ofco-auth") || "");
-        const token = localInfo.authToken || "";
+        const token:string = localInfo.authToken || "";
         const expiresAt = new Date(localInfo.expiresAt);
 
         const user = new User(token, expiresAt);

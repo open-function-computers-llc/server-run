@@ -3,31 +3,35 @@ package website
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 )
 
 var stateFilename = "settings.json"
 
 type Site struct {
-	IsLocked         bool     `json:"isLocked"`
-	Domain           string   `json:"domain"`
-	AlternateDomains []string `json:"alternateDomains"`
-	UptimeURI        string   `json:"uptimeURI"`
-	Username         string   `json:"username"`
+	IsLocked                  bool     `json:"isLocked"`
+	Account                   string   `json:"account"`
+	UptimeURI                 string   `json:"uptimeURI"`
+	Username                  string   `json:"username"`
+	PrimaryDomain             string   `json:"domain"`
+	AlternateDomains          []string `json:"alternateDomains"`
+	AlwaysUnlockedDirectories []string `json:"alwaysUnlockedDirectories"`
 }
 
-func New(domain string) (Site, error) {
+func New(account string) (Site, error) {
 	s := Site{
-		Domain:           domain,
+		Account:          account,
 		AlternateDomains: []string{},
 	}
 
 	return s, nil
 }
 
-// LoadStatus - hydrate a site by the contents of of a JSON config file
+// LoadStatus - hydrate a site by the contents of of a JSON config file and
+// create the config file if it is missing
 func (s *Site) LoadStatus() error {
-	if s.Domain == "" {
+	if s.Account == "" {
 		return errors.New("Can't load status for an empty domain")
 	}
 
@@ -35,8 +39,17 @@ func (s *Site) LoadStatus() error {
 	return s.hydrateData()
 }
 
+// LoadStatus - hydrate a site by the contents of of a JSON config file
+func (s *Site) loadExistingStatus() error {
+	if s.Account == "" {
+		return errors.New("Can't load status for an empty domain")
+	}
+
+	return s.loadDataFromExistingStateFile()
+}
+
 func (s *Site) stateFolder() string {
-	return os.Getenv("ACCOUNTS_ROOT") + s.Domain
+	return os.Getenv("ACCOUNTS_ROOT") + s.Account
 }
 
 func (s *Site) stateFilePath() string {
@@ -53,19 +66,33 @@ func (s *Site) verifyStateFileExists() {
 	// check file
 	_, err = os.Stat(s.stateFilePath())
 	if err != nil {
-		data := settings{
-			Domain: s.Domain,
-			AlwaysUnlockedDirectories: []string{
-				os.Getenv("WEBSITES_ROOT") + s.Domain + "/uploads", // uploads directory is always flagged as g2g
-			},
+		s.AlwaysUnlockedDirectories = []string{
+			os.Getenv("WEBSITES_ROOT") + "/" + s.Account + "/uploads", // uploads directory is always flagged as g2g
 		}
 
 		// TODO: juggle the different server types to hydrate the default unlocked directories
 
-		json, _ := json.Marshal(data)
+		json, _ := json.Marshal(s)
 		file, _ := os.Create(s.stateFilePath())
 		file.WriteString(string(json))
 	}
+}
+
+func (s *Site) loadDataFromExistingStateFile() error {
+	// check folder
+	_, err := os.Stat(s.stateFolder())
+	if err != nil {
+		fmt.Println("bad folder " + s.stateFolder())
+		return err
+	}
+
+	// check file
+	_, err = os.Stat(s.stateFilePath())
+	if err != nil {
+		fmt.Println("bad file " + s.stateFilePath())
+		return err
+	}
+	return s.hydrateData()
 }
 
 func (s *Site) saveStateFile() error {
@@ -75,19 +102,27 @@ func (s *Site) saveStateFile() error {
 
 func (s *Site) hydrateData() error {
 	directory := os.Getenv("ACCOUNTS_ROOT")
-	status, err := os.ReadFile(directory + s.Domain + "/settings.json")
+	status, err := os.ReadFile(directory + s.Account + "/settings.json")
 	if err != nil {
 		return err
 	}
-	var siteSettings settings
-	err = json.Unmarshal(status, &siteSettings)
+	err = json.Unmarshal(status, &s)
 	if err != nil {
 		return err
 	}
-
-	// now we hydrate the data from the json
-	s.IsLocked = siteSettings.IsLocked
-	s.UptimeURI = siteSettings.UptimeURI
 
 	return nil
+}
+
+func FindExistingSite(d string) (*Site, error) {
+	s, err := New(d)
+	if err != nil {
+		return &s, err
+	}
+	err = s.loadDataFromExistingStateFile()
+	if err != nil {
+		fmt.Println("couldn't load existing state file")
+		return &s, err
+	}
+	return &s, err
 }

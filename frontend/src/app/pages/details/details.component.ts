@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, share } from 'rxjs';
 import { ServerService } from 'src/app/server.service';
+import { UptimeService } from 'src/app/uptime/uptime.service';
 import { Website } from 'src/app/Website';
 
 @Component({

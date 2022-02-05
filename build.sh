@@ -10,11 +10,11 @@ cd ..
 
 # build and run the new binary
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    env GOOS=linux GOARCH=amd64 go build -o dist/server-run
-    dist/server-run &
+    env GOOS=linux GOARCH=amd64 go build -ldflags="-X main.Version=`git rev-parse HEAD`" -o dist/server-run
+    dist/server-run serve &
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    env GOOS=darwin GOARCH=amd64 go build -o dist/server-run
-    dist/server-run &
+    env GOOS=darwin GOARCH=amd64 go build -ldflags="-X main.Version=`git rev-parse HEAD`" -o dist/server-run
+    dist/server-run serve &
 elif [[ "$OSTYPE" == "cygwin" ]]; then
     echo "windows?"
 elif [[ "$OSTYPE" == "msys" ]]; then

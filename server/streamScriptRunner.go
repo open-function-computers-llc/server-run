@@ -10,24 +10,44 @@ import (
 )
 
 func (s *Server) streamScriptRunner() http.HandlerFunc {
-	availableScripts := map[string]string{
+	availableScriptsWithArguments := map[string]string{
 		"unlock": "ofco-unlock-site.sh",
 		"lock":   "ofco-lock-site-production.sh",
 	}
+	availableScriptsWithoutArguments := map[string]string{
+		"f2banstatus": "f2bstatus",
+	}
+
+	// combine the above
+	var availableScripts []string
+	for name, _ := range availableScriptsWithArguments {
+		availableScripts = append(availableScripts, name)
+	}
+	for name, _ := range availableScriptsWithoutArguments {
+		availableScripts = append(availableScripts, name)
+	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 
-		d := r.FormValue("domain")
 		script := r.FormValue("script")
 
-		if d == "" || script == "" {
+		if script == "" {
 			sendJSONError(w, http.StatusBadRequest, map[string]string{
-				"error": "the query params `domain` and `script` are both required",
+				"error": "the query param `script` is required",
 			})
 			return
 		}
 
-		if _, ok := availableScripts[script]; !ok {
+		// verify that the script called is in the g2g list
+		validScript := false
+		for _, checkedName := range availableScripts {
+			if script == checkedName {
+				validScript = true
+				break
+			}
+		}
+		if !validScript {
 			sendJSONError(w, http.StatusBadRequest, map[string]string{
 				"error": "Invalid script requested",
 			})
@@ -47,9 +67,18 @@ func (s *Server) streamScriptRunner() http.HandlerFunc {
 		commChannel := make(chan string)
 
 		// set up the command runner
-		cmd := exec.Command(s.scriptsRoot+availableScripts[script], d)
+		var cmd *exec.Cmd
+		if _, ok := availableScriptsWithArguments[script]; ok {
+			d := r.FormValue("domain")
+			cmd = exec.Command(s.scriptsRoot+availableScriptsWithArguments[script], d)
+		}
+		if _, ok := availableScriptsWithoutArguments[script]; ok {
+			cmd = exec.Command(s.scriptsRoot + availableScriptsWithoutArguments[script])
+		}
+
 		outPipe, _ := cmd.StdoutPipe()
 		cmd.Stderr = cmd.Stdout
+		cmd.Env = append(cmd.Env, "NOCONFIRM=yes")
 		scanner := bufio.NewScanner(outPipe)
 
 		go func() {
@@ -61,6 +90,9 @@ func (s *Server) streamScriptRunner() http.HandlerFunc {
 		}()
 
 		err = cmd.Start()
+		if err != nil {
+			s.logger.Error(err)
+		}
 
 		for incomingCommMessage := range commChannel {
 			message := map[string]interface{}{

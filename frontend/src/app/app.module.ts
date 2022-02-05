@@ -19,6 +19,9 @@ import { SafeUrlPipePipe } from './pipes/safe-url-pipe.pipe';
 import { ProcessComponent } from './pages/process/process.component';
 import { UptimeComponent } from './uptime/uptime.component';
 import { UptimeService } from './uptime/uptime.service';
+import { ScriptViewerComponent } from './script-viewer/script-viewer.component';
+import { BoostrapComponent } from './boostrap/boostrap.component';
+import { FailToBanComponent } from './pages/fail-to-ban/fail-to-ban.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +37,9 @@ import { UptimeService } from './uptime/uptime.service';
     SafeUrlPipePipe,
     ProcessComponent,
     UptimeComponent,
+    ScriptViewerComponent,
+    BoostrapComponent,
+    FailToBanComponent,
   ],
   imports: [
     BrowserModule,
