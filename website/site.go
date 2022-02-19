@@ -69,6 +69,7 @@ func (s *Site) verifyStateFileExists() {
 		s.AlwaysUnlockedDirectories = []string{
 			os.Getenv("WEBSITES_ROOT") + "/" + s.Account + "/uploads", // uploads directory is always flagged as g2g
 		}
+		s.Username = s.Account
 
 		// TODO: juggle the different server types to hydrate the default unlocked directories
 

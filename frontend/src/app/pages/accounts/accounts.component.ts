@@ -9,12 +9,11 @@ import { Website } from 'src/app/Website';
   styleUrls: ['./accounts.component.scss']
 })
 export class SitesComponent implements OnInit {
-  sites$!: Observable<Website[]>;
+  sites: Observable<Website[]>;
 
   constructor(private serverService: ServerService) { }
 
   ngOnInit(): void {
-    this.sites$ = this.serverService.getSites();
+    this.sites = this.serverService.getSites();
   }
-
 }

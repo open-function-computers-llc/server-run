@@ -1,0 +1,22 @@
+<h1 *ngIf="!cloningFrom">Add an account</h1>
+<h1 *ngIf="cloningFrom">Clone {{ cloningFrom }}</h1>
+
+<div class="d-flex mb-3" *ngIf="!isAddingAccount">
+    <div class="input-group">
+        <span class="input-group-text" id="basic-addon1">Account Name</span>
+        <input type="text" class="form-control" placeholder="example.com" autofocus [(ngModel)]="newAccountName"
+            (keydown.enter)="addAccount()" />
+        <button class="btn btn-success" (click)="addAccount()">Add Account</button>
+    </div>
+</div>
+
+<button class="btn btn-danger" *ngIf="!isAddingAccount" (click)="goBack()">Cancel</button>
+
+<app-script-viewer
+    *ngIf="isAddingAccount"
+    [script-name]="scriptToRun()"
+    [script-env]="generateScriptENV()"
+    (isCompleted)="onScriptCompleted($event)"
+    ></app-script-viewer>
+
+<button class="btn btn-success" *ngIf="completedAccountCreation" (click)="goBack()">Go Back</button>

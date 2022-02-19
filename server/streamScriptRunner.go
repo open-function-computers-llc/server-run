@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"os/exec"
+	"strings"
 
 	"nhooyr.io/websocket"
 )
@@ -17,13 +18,20 @@ func (s *Server) streamScriptRunner() http.HandlerFunc {
 	availableScriptsWithoutArguments := map[string]string{
 		"f2banstatus": "f2bstatus",
 	}
+	availableScriptsWithENVRequirements := map[string]string{
+		"addAccount":   "create-new-account.sh",
+		"cloneAccount": "clone-wordpress-site.sh",
+	}
 
 	// combine the above
 	var availableScripts []string
-	for name, _ := range availableScriptsWithArguments {
+	for name := range availableScriptsWithArguments {
 		availableScripts = append(availableScripts, name)
 	}
-	for name, _ := range availableScriptsWithoutArguments {
+	for name := range availableScriptsWithoutArguments {
+		availableScripts = append(availableScripts, name)
+	}
+	for name := range availableScriptsWithENVRequirements {
 		availableScripts = append(availableScripts, name)
 	}
 
@@ -68,12 +76,38 @@ func (s *Server) streamScriptRunner() http.HandlerFunc {
 
 		// set up the command runner
 		var cmd *exec.Cmd
+
+		// 3 ways to run a script!
+
+		// option 1 - the script has a single argument
 		if _, ok := availableScriptsWithArguments[script]; ok {
-			d := r.FormValue("domain")
+			d := r.FormValue("arg")
 			cmd = exec.Command(s.scriptsRoot+availableScriptsWithArguments[script], d)
 		}
+
+		// option 2 - the script has zero arguments and nothing special in the ENV
 		if _, ok := availableScriptsWithoutArguments[script]; ok {
 			cmd = exec.Command(s.scriptsRoot + availableScriptsWithoutArguments[script])
+		}
+
+		// option 3 - this is the weird one
+		// the only takes the script name, no arguments, but all the ENV variables
+		// need to be passed into this script in a single form input valiable
+		// example: /stream/script?script=cloneAccount&env=DESTINATION_ACCOUNT=newbie|SOURCE_ACCOUNT=asdfasdf
+		// will be translated to
+		// script = cloneAccount
+		// env =
+		//     DESTINATION_ACCOUNT=newbie
+		//     SOURCE_ACCOUNT=asdfasdf
+		if _, ok := availableScriptsWithENVRequirements[script]; ok {
+			cmd = exec.Command(s.scriptsRoot + availableScriptsWithENVRequirements[script])
+			e := r.FormValue("env")
+			envPairs := strings.Split(e, "|")
+			for _, env := range envPairs {
+				cmd.Env = append(cmd.Env, s.sanitizeEnv(env))
+			}
+			s.logger.Info("Running: ", s.scriptsRoot+availableScriptsWithENVRequirements[script])
+			s.logger.Info("Script ENV: ", cmd.Env)
 		}
 
 		outPipe, _ := cmd.StdoutPipe()

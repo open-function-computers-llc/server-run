@@ -35,10 +35,18 @@ export class ServerService {
     return subject;
   }
 
-  streamScriptProcess(script: string, domain: string) : Observable<ScriptMessage> {
-    const base = window.location.href.split('/').slice(0, 3).join('/') + "/"
-    const subject = webSocket<ScriptMessage>(base.replace("http", "ws") + "stream/script?token=" + this.getToken() + "&script=" + script + "&domain=" + domain);
-    return subject;
+  streamScriptProcess(script: string, arg?: string, env?: string) : Observable<ScriptMessage> {
+    // build script path
+    let path = window.location.href.split('/').slice(0, 3).join('/') + "/";
+    path = path.replace("http", "ws");
+    path = path+"stream/script?token=" + this.getToken();
+    path = path + "&script=" + script;
+    if (!!env) {
+      path = path + "&env="+env;
+    } else {
+      path = path + "&arg="+arg;
+    }
+    return webSocket<ScriptMessage>(path);
   }
 
   getSites() : Observable<Website[]> {

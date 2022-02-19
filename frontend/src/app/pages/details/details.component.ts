@@ -42,13 +42,14 @@ export class DetailsComponent implements OnInit {
   }
 
   unlockSite() {
-    console.log("unlock!")
     this.router.navigate(['process', 'unlock'], { relativeTo: this.route });
   }
 
   lockSite() {
-    console.log("lock!")
     this.router.navigate(['process', 'lock'], { relativeTo: this.route });
   }
 
+  cloneAccount() {
+    this.router.navigate(["..", "clone", this.domain], { relativeTo: this.route });
+  }
 }

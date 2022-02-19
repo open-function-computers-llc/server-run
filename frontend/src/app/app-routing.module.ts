@@ -10,6 +10,7 @@ import { SitesComponent } from './pages/accounts/accounts.component';
 import { ScriptViewerComponent } from './script-viewer/script-viewer.component';
 import { BoostrapComponent } from './boostrap/boostrap.component';
 import { FailToBanComponent } from './pages/fail-to-ban/fail-to-ban.component';
+import { AddAccountComponent } from './pages/add-account/add-account.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -17,6 +18,8 @@ const routes: Routes = [
   { path: 'system', canActivate: [AuthGuard], component: BoostrapComponent, children:[
     { path: 'home', component: HomeComponent },
     { path: 'accounts', component: SitesComponent },
+    { path: 'accounts/add', component: AddAccountComponent },
+    { path: 'accounts/clone/:domain', component: AddAccountComponent },
     { path: 'accounts/:domain', component: DetailsComponent },
     { path: 'accounts/:domain/process/:action', component: ProcessComponent },
     { path: 'f2ban/status', component: FailToBanComponent },

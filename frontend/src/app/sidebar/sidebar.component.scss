@@ -8,6 +8,11 @@ a {
     position: relative;
     padding-left: 0;
     transition: padding 0.5s ease;
+    display: block;
+
+    &:hover {
+        text-decoration: underline;
+    }
 
     &:before {
         content: "»";

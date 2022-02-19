@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ServerService } from '../server.service';
 
@@ -9,6 +9,10 @@ import { ServerService } from '../server.service';
 })
 export class ScriptViewerComponent implements OnInit {
   @Input('script-name') scriptName: string;
+  @Input('script-arg') scriptArg: string = "";
+  @Input('script-env') scriptEnv: string = "";
+  @Output() isCompleted: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   scriptOutput: Subscription;
   messages: string[] = [];
   isComplete: boolean = false;
@@ -18,8 +22,9 @@ export class ScriptViewerComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.scriptName);
-    this.scriptOutput = this.serverService.streamScriptProcess(this.scriptName, "").subscribe(
+    console.log(this.scriptName, this.scriptEnv, this.scriptArg);
+    const arg = this.scriptArg.split(" ").join("-");
+    this.scriptOutput = this.serverService.streamScriptProcess(this.scriptName, arg, this.scriptEnv).subscribe(
       (o) => {
         this.messages.push(o.output);
       },
@@ -28,6 +33,7 @@ export class ScriptViewerComponent implements OnInit {
       },
       () => {
         this.isComplete = true;
+        this.isCompleted.emit(true);
       }
     );
   }

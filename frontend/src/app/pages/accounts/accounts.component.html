@@ -1,9 +1,19 @@
-<h2>Accounts on this server:</h2>
+<div class="d-flex justify-content-between">
+    <h2>Accounts on this server:</h2>
+    <div>
+        <a routerLink="/system/accounts/add" class="btn btn-primary">Add Account</a>
+    </div>
+</div>
 
-<ul class="list-group">
-    <li *ngFor="let site of sites$ | async;" class="list-group-item d-flex" [class]="{ 'list-group-item-success': site.isLocked, 'list-group-item-danger': !site.isLocked }">
-        <i-bs name="lock-fill" *ngIf="site.isLocked"></i-bs>
-        <i-bs name="unlock-fill" *ngIf="!site.isLocked"></i-bs>
-        <a class="mx-3 d-block" routerLink="/system/accounts/{{ site.account }}">{{ site.account }}</a>
-    </li>
-</ul>
+<div class="row">
+    <div class="col-md-4">
+        <ul class="list-group">
+            <li *ngFor="let site of sites | async;" class="list-group-item d-flex"
+                [class]="{ 'list-group-item-success': site.isLocked, 'list-group-item-danger': !site.isLocked }">
+                <i-bs name="lock-fill" *ngIf="site.isLocked"></i-bs>
+                <i-bs name="unlock-fill" *ngIf="!site.isLocked"></i-bs>
+                <a class="mx-3 d-block" routerLink="/system/accounts/{{ site.account }}">{{ site.account }}</a>
+            </li>
+        </ul>
+    </div>
+</div>

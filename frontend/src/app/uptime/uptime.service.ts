@@ -18,10 +18,10 @@ export class UptimeService {
         this.http.get<BootstrapUptimeResponse>("/api/uptime-provider", {headers: this.serverService.getHeaders()}).pipe(
             take(1),
         ).subscribe({
-            next: (v) => {
+            next: (v:any) => {
                 this.uptimeMonitoringIsAvailable = v.uptimeAvailable;
             },
-            error: (e) => { alert("Nope!") }
+            error: (e:any) => { alert("Nope!") }
         });
     }
 
@@ -38,10 +38,10 @@ export class UptimeService {
         this.http.post("/api/update", body, {headers: this.serverService.getHeaders()}).pipe(
             take(1),
         ).subscribe({
-            next: (v) => {
+            next: (v:any) => {
                 console.log(v)
             },
-            error: (err) => {
+            error: (err:any) => {
                 console.log("ERROR! -> ", err)
             }
         });

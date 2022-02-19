@@ -22,6 +22,7 @@ import { UptimeService } from './uptime/uptime.service';
 import { ScriptViewerComponent } from './script-viewer/script-viewer.component';
 import { BoostrapComponent } from './boostrap/boostrap.component';
 import { FailToBanComponent } from './pages/fail-to-ban/fail-to-ban.component';
+import { AddAccountComponent } from './pages/add-account/add-account.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { FailToBanComponent } from './pages/fail-to-ban/fail-to-ban.component';
     ScriptViewerComponent,
     BoostrapComponent,
     FailToBanComponent,
+    AddAccountComponent,
   ],
   imports: [
     BrowserModule,
