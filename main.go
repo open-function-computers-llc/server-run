@@ -50,12 +50,25 @@ func main() {
 			Usage:   "Update a specific account's settings file",
 			Flags: []cli.Flag{
 				cli.StringFlag{
-					Name:  "account",
-					Usage: "Account you're updating manually",
+					Name:     "account",
+					Usage:    "Account you're updating manually (required)",
+					Required: true,
 				},
 				cli.BoolFlag{
 					Name:  "locked",
 					Usage: "Locked status for this account",
+				},
+				cli.StringFlag{
+					Name:  "set-domain",
+					Usage: "Update the main domain for the selected account",
+				},
+				cli.StringFlag{
+					Name:  "add-domain",
+					Usage: "Add a domain to the selected account",
+				},
+				cli.StringFlag{
+					Name:  "remove-domain",
+					Usage: "Remove a domain from the selected account",
 				},
 			},
 			Action: func(c *cli.Context) error {

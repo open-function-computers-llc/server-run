@@ -5,8 +5,8 @@ killall server-run
 
 cd frontend
 # npm install
-ng build
-cd ..
+# ng build
+# cd ..
 
 # build and run the new binary
 if [[ "$OSTYPE" == "linux-gnu" ]]; then

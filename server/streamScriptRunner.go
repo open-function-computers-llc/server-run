@@ -20,7 +20,7 @@ func (s *Server) streamScriptRunner() http.HandlerFunc {
 	}
 	availableScriptsWithENVRequirements := map[string]string{
 		"addAccount":   "create-new-account.sh",
-		"cloneAccount": "clone-wordpress-site.sh",
+		"cloneAccount": "clone-wordpress-account.sh",
 	}
 
 	// combine the above

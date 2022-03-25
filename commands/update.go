@@ -20,5 +20,17 @@ func Update(c *cli.Context) error {
 	if c.IsSet("locked") {
 		return site.SetLocked(c.Bool("locked"))
 	}
+
+	if c.String("set-domain") != "" {
+		return site.SetPrimaryDomain(c.String("set-domain"))
+	}
+
+	if c.String("add-domain") != "" {
+		return site.AddAlternateDomain(c.String("add-domain"))
+	}
+
+	if c.String("remove-domain") != "" {
+		return site.RemoveAlternateDomain(c.String("remove-domain"))
+	}
 	return errors.New("WARNING: No update command was ran!")
 }
