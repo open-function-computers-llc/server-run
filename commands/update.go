@@ -17,8 +17,17 @@ func Update(c *cli.Context) error {
 	}
 
 	// now we've loaded a site, check the other flags
-	if c.IsSet("locked") {
-		return site.SetLocked(c.Bool("locked"))
+	if c.String("locked") != "" {
+		if c.String("locked") != "true" && c.String("locked") != "false" {
+			return errors.New("Invalid option for 'locked' status. Valid options: true|false.")
+		}
+		if c.String("locked") == "true" {
+			return site.SetLocked(true)
+		}
+		if c.String("locked") == "false" {
+			return site.SetLocked(false)
+		}
+		return errors.New("something weird just happened")
 	}
 
 	if c.String("set-domain") != "" {

@@ -63,7 +63,9 @@ export class ServerService {
           account: d,
           isLocked: false,
           alternateDomains: [],
+          domain: "",
           uptimeURI: "",
+          sshPubKey: "",
         }))
       )
   }

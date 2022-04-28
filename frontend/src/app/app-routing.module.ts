@@ -11,6 +11,7 @@ import { ScriptViewerComponent } from './script-viewer/script-viewer.component';
 import { BoostrapComponent } from './boostrap/boostrap.component';
 import { FailToBanComponent } from './pages/fail-to-ban/fail-to-ban.component';
 import { AddAccountComponent } from './pages/add-account/add-account.component';
+import { AllDomainsComponent } from './pages/all-domains/all-domains.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -23,6 +24,7 @@ const routes: Routes = [
     { path: 'accounts/:domain', component: DetailsComponent },
     { path: 'accounts/:domain/process/:action', component: ProcessComponent },
     { path: 'f2ban/status', component: FailToBanComponent },
+    { path: 'all-domains', component: AllDomainsComponent },
   ]},
   { path: '**', component: ErrorComponent },
 ];

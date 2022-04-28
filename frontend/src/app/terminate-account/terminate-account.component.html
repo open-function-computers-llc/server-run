@@ -1,0 +1,18 @@
+<div>
+    <div class="d-flex align-items-center mb-4">
+        <i-bs name="question-octagon-fill" width="2rem" height="2rem"></i-bs>
+        <h4 class="mb-0 ms-3">Are you sure you want to terminate this account?</h4>
+    </div>
+
+    <p class="text-danger mb-3">This is permanant. There is no going back from this!</p>
+    <a *ngIf="!terminationVerified" (click)="verifyTermination()" class="btn btn-danger">Terminate Account</a>
+
+    <app-script-viewer
+        *ngIf="terminationVerified"
+        script-name="terminateAccount"
+        [script-env]="generateScriptENV()"
+        (isCompleted)="onScriptCompleted($event)"
+    ></app-script-viewer>
+
+    <button *ngIf="terminationCompleted" (click)="toAllAccounts()" class="btn btn-primary">All Accounts</button>
+</div>

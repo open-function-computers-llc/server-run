@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -17,6 +18,7 @@ type Site struct {
 	PrimaryDomain             string   `json:"domain"`
 	AlternateDomains          []string `json:"alternateDomains"`
 	AlwaysUnlockedDirectories []string `json:"alwaysUnlockedDirectories"`
+	PubKey                    string   `json:"sshPubKey"`
 }
 
 func New(account string) (Site, error) {
@@ -56,6 +58,23 @@ func (s *Site) stateFilePath() string {
 	return s.stateFolder() + "/" + stateFilename
 }
 
+func (s *Site) hydrateSSHPubKey() {
+	// check for key file
+	_, err := os.Stat(s.stateFolder() + "/.ssh/id_rsa.pub")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	bytes, err := os.ReadFile(s.stateFolder() + "/.ssh/id_rsa.pub")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	s.PubKey = string(bytes)
+}
+
 func (s *Site) verifyStateFileExists() {
 	// check folder
 	_, err := os.Stat(s.stateFolder())
@@ -67,7 +86,7 @@ func (s *Site) verifyStateFileExists() {
 	_, err = os.Stat(s.stateFilePath())
 	if err != nil {
 		s.AlwaysUnlockedDirectories = []string{
-			os.Getenv("WEBSITES_ROOT") + "/" + s.Account + "/uploads", // uploads directory is always flagged as g2g
+			os.Getenv("WEBSITES_ROOT") + s.Account + "/uploads", // uploads directory is always flagged as g2g
 		}
 		s.Username = s.Account
 
@@ -91,7 +110,7 @@ func (s *Site) loadDataFromExistingStateFile() error {
 	_, err = os.Stat(s.stateFilePath())
 	if err != nil {
 		fmt.Println("bad file " + s.stateFilePath())
-		return err
+		s.verifyStateFileExists() // create the file
 	}
 	return s.hydrateData()
 }
@@ -111,6 +130,8 @@ func (s *Site) hydrateData() error {
 	if err != nil {
 		return err
 	}
+
+	s.hydrateSSHPubKey()
 
 	return nil
 }

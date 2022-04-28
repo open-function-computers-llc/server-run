@@ -17,10 +17,13 @@ func (s *Server) streamScriptRunner() http.HandlerFunc {
 	}
 	availableScriptsWithoutArguments := map[string]string{
 		"f2banstatus": "f2bstatus",
+		"allDomains":  "list-all-domains.sh",
 	}
 	availableScriptsWithENVRequirements := map[string]string{
-		"addAccount":   "create-new-account.sh",
-		"cloneAccount": "clone-wordpress-account.sh",
+		"addAccount":         "create-new-account.sh",
+		"cloneAccount":       "clone-wordpress-account.sh",
+		"terminateAccount":   "ofco-delete-account.sh",
+		"addDomainToAccount": "add-domain-to-account.sh",
 	}
 
 	// combine the above
@@ -113,6 +116,7 @@ func (s *Server) streamScriptRunner() http.HandlerFunc {
 		outPipe, _ := cmd.StdoutPipe()
 		cmd.Stderr = cmd.Stdout
 		cmd.Env = append(cmd.Env, "NOCONFIRM=yes")
+		cmd.Env = append(cmd.Env, "TERM=xterm-mono")
 		scanner := bufio.NewScanner(outPipe)
 
 		go func() {
@@ -126,6 +130,8 @@ func (s *Server) streamScriptRunner() http.HandlerFunc {
 		err = cmd.Start()
 		if err != nil {
 			s.logger.Error(err)
+			commChannel <- "Error running the command: " + err.Error()
+			close(commChannel)
 		}
 
 		for incomingCommMessage := range commChannel {

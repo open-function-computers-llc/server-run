@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, share } from 'rxjs';
+import { first, map, Observable, share } from 'rxjs';
 import { ServerService } from 'src/app/server.service';
 import { UptimeService } from 'src/app/uptime/uptime.service';
 import { Website } from 'src/app/Website';
@@ -15,6 +15,11 @@ export class DetailsComponent implements OnInit {
   analyticsView: string = "1";
   domain: string = "";
   analyticsPath: string = "";
+  showingAnalytics: boolean = false;
+  showingPubkey: boolean = false;
+  showingDomains: boolean = false;
+  showingTerminateVerification: boolean = false;
+  temporaryCopyAnimationShowing: boolean = false;
 
   constructor(
     private serverService: ServerService,
@@ -32,13 +37,56 @@ export class DetailsComponent implements OnInit {
   setAnalyticsURL() {
     const token = this.serverService.getToken();
     this.analyticsPath = "/api/analytics?domain=" + this.domain + "&period=" + this.analyticsView + "&token=" + token;
-    // return this.sanitizer.bypassSecurityTrustResourceUrl("/api/analytics?domain=" + this.domain + "&period=" + this.analyticsView + "&token=" + token);
   }
 
-  setAnalyticView(e:any) {
-    console.log(e.target.value);
-    this.analyticsView = e.target.value;
+  setDetailView(e:any) {
+    const selectedValue = e.target.value;
+    if (selectedValue === "") {
+      this.showingAnalytics = false;
+      this.showingDomains = false;
+      this.showingPubkey = false;
+      this.showingTerminateVerification = false;
+      return;
+    }
+
+    if (selectedValue === 'showPubKey') {
+      this.showingPubkey = true;
+      this.showingAnalytics = false;
+      this.showingDomains = false;
+      this.showingTerminateVerification = false;
+      return;
+    }
+
+    if (selectedValue === "terminateAccount") {
+      this.showingAnalytics = false;
+      this.showingPubkey = false;
+      this.showingDomains = false;
+      this.showingTerminateVerification = true;
+      return;
+    }
+
+    if (selectedValue === 'showDomains') {
+      this.showingDomains = true;
+      this.showingPubkey = false;
+      this.showingAnalytics = false;
+      this.showingTerminateVerification = false;
+      return;
+    }
+
+    this.showingAnalytics = true;
+    this.showingPubkey = false;
+    this.showingDomains = false;
+    this.showingTerminateVerification = false;
+    this.analyticsView = selectedValue.substr(10);
     this.setAnalyticsURL();
+  }
+
+  sshPubkeyToClipboard(key:string) {
+    navigator.clipboard.writeText(key);
+    this.temporaryCopyAnimationShowing = true;
+    setTimeout(() => {
+      this.temporaryCopyAnimationShowing = false;
+    }, 1000);
   }
 
   unlockSite() {

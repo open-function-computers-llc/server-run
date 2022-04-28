@@ -29,11 +29,33 @@
             class="d-flex flex-column align-items-end"></app-uptime>
     </div>
 
-    <h2 class="mt-5">Analytics</h2>
-    <select class="form-select" aria-label="Analytic View" (change)="setAnalyticView($event)" style="max-width: 500px;">
-        <option value="1">Day</option>
-        <option value="30">Month</option>
-        <option value="all">All Time</option>
-      </select>
-    <iframe class="mt-3" [src]="analyticsPath | safeUrlPipe"></iframe>
+    <div class="d-flex justify-content-between mt-5">
+        <h2>Account Actions</h2>
+    </div>
+    <select class="form-select" aria-label="Analytic View" (change)="setDetailView($event)" style="max-width: 500px;">
+        <option value="">Choose</option>
+        <option value="showDomains">View Account Domains</option>
+        <option value="analytics-1">View Analytics (Day)</option>
+        <option value="analytics-30">View Analytics (Month)</option>
+        <option value="analytics-all">View Analytics (All Time)</option>
+        <option value="showPubKey" *ngIf="s.sshPubKey !== ''">View Account SSH Pubkey</option>
+        <option value="" disabled>Dangerous stuff below...</option>
+        <option value="terminateAccount">Terminate Account</option>
+    </select>
+
+    <iframe class="mt-3" [src]="analyticsPath | safeUrlPipe" *ngIf="showingAnalytics"></iframe>
+
+    <div class="pubkey-viewer mt-3" [class]="{'copying': temporaryCopyAnimationShowing }" (click)="sshPubkeyToClipboard(s.sshPubKey)" *ngIf="showingPubkey">{{ s.sshPubKey }}</div>
+
+    <div *ngIf="showingDomains">
+        <h4>Domains on this account:</h4>
+        <p>Primary domain: {{ s.domain }}</p>
+        <h4>Additional Domains:</h4>
+    </div>
+
+    <app-terminate-account
+        *ngIf="showingTerminateVerification"
+        class="mt-3 d-block"
+        [account]="s.account"
+        ></app-terminate-account>
 </ng-container>

@@ -23,6 +23,8 @@ import { ScriptViewerComponent } from './script-viewer/script-viewer.component';
 import { BoostrapComponent } from './boostrap/boostrap.component';
 import { FailToBanComponent } from './pages/fail-to-ban/fail-to-ban.component';
 import { AddAccountComponent } from './pages/add-account/add-account.component';
+import { TerminateAccountComponent } from './terminate-account/terminate-account.component';
+import { AllDomainsComponent } from './pages/all-domains/all-domains.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +44,8 @@ import { AddAccountComponent } from './pages/add-account/add-account.component';
     BoostrapComponent,
     FailToBanComponent,
     AddAccountComponent,
+    TerminateAccountComponent,
+    AllDomainsComponent,
   ],
   imports: [
     BrowserModule,

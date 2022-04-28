@@ -54,9 +54,9 @@ func main() {
 					Usage:    "Account you're updating manually (required)",
 					Required: true,
 				},
-				cli.BoolFlag{
+				cli.StringFlag{
 					Name:  "locked",
-					Usage: "Locked status for this account",
+					Usage: "Set locked status for this account (true|false)",
 				},
 				cli.StringFlag{
 					Name:  "set-domain",
