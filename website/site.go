@@ -109,7 +109,8 @@ func (s *Site) loadDataFromExistingStateFile() error {
 	// check file
 	_, err = os.Stat(s.stateFilePath())
 	if err != nil {
-		fmt.Println("bad file " + s.stateFilePath())
+		fmt.Println("settings file doesn't exist: " + s.stateFilePath())
+		fmt.Println("creating it...")
 		s.verifyStateFileExists() // create the file
 	}
 	return s.hydrateData()

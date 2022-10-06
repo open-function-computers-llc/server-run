@@ -11,7 +11,7 @@ func (s *Server) handleDetails() http.HandlerFunc {
 		r.ParseForm()
 
 		d := r.FormValue("domain") // TODO: switch this in ANGULAR to "account"
-		site := website.Site{}
+		var site website.Site
 
 		for _, s := range s.sites {
 			if s.Account == d {
