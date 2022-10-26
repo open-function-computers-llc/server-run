@@ -18,6 +18,7 @@ export class DetailsComponent implements OnInit {
   showingAnalytics: boolean = false;
   showingPubkey: boolean = false;
   showingDomains: boolean = false;
+  showingChart: boolean = false;
   showingTerminateVerification: boolean = false;
   temporaryCopyAnimationShowing: boolean = false;
 
@@ -45,6 +46,7 @@ export class DetailsComponent implements OnInit {
       this.showingAnalytics = false;
       this.showingDomains = false;
       this.showingPubkey = false;
+      this.showingChart = false;
       this.showingTerminateVerification = false;
       return;
     }
@@ -53,6 +55,7 @@ export class DetailsComponent implements OnInit {
       this.showingPubkey = true;
       this.showingAnalytics = false;
       this.showingDomains = false;
+      this.showingChart = false;
       this.showingTerminateVerification = false;
       return;
     }
@@ -61,6 +64,7 @@ export class DetailsComponent implements OnInit {
       this.showingAnalytics = false;
       this.showingPubkey = false;
       this.showingDomains = false;
+      this.showingChart = false;
       this.showingTerminateVerification = true;
       return;
     }
@@ -69,6 +73,16 @@ export class DetailsComponent implements OnInit {
       this.showingDomains = true;
       this.showingPubkey = false;
       this.showingAnalytics = false;
+      this.showingChart = false;
+      this.showingTerminateVerification = false;
+      return;
+    }
+
+    if (selectedValue === 'analyticChart') {
+      this.showingDomains = false;
+      this.showingPubkey = false;
+      this.showingAnalytics = false;
+      this.showingChart = true;
       this.showingTerminateVerification = false;
       return;
     }
@@ -76,6 +90,7 @@ export class DetailsComponent implements OnInit {
     this.showingAnalytics = true;
     this.showingPubkey = false;
     this.showingDomains = false;
+    this.showingChart = false;
     this.showingTerminateVerification = false;
     this.analyticsView = selectedValue.substr(10);
     this.setAnalyticsURL();

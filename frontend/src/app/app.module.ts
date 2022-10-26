@@ -25,6 +25,8 @@ import { FailToBanComponent } from './pages/fail-to-ban/fail-to-ban.component';
 import { AddAccountComponent } from './pages/add-account/add-account.component';
 import { TerminateAccountComponent } from './terminate-account/terminate-account.component';
 import { AllDomainsComponent } from './pages/all-domains/all-domains.component';
+import { HighchartsChartModule } from 'highcharts-angular';
+import { LineChartComponent } from './line-chart/line-chart.component';
 
 @NgModule({
   declarations: [
@@ -46,13 +48,15 @@ import { AllDomainsComponent } from './pages/all-domains/all-domains.component';
     AddAccountComponent,
     TerminateAccountComponent,
     AllDomainsComponent,
+    LineChartComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    NgxBootstrapIconsModule.pick(allIcons)
+    NgxBootstrapIconsModule.pick(allIcons),
+    HighchartsChartModule,
   ],
   providers: [
     AuthService,
