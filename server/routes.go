@@ -11,6 +11,7 @@ func (s *Server) bindRoutes() {
 		"details":         s.handleDetails(),
 		"update":          s.handleUpdateSite(),
 		"analytics":       s.handleAnalytics(),
+		"analytics-json":  s.handleAnalyticsJSON(),
 		"uptime":          s.handleUptimeInfo(),
 		"uptime-provider": s.handleUptimeDetails(),
 	}

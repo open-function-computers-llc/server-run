@@ -7,6 +7,7 @@ import { Website } from './Website';
 import { webSocket } from "rxjs/webSocket";
 import { ScriptMessage } from './ScriptMessage';
 import { AuthService } from './auth/auth.service';
+import { Options } from 'highcharts';
 
 @Injectable({
   providedIn: 'root'
@@ -66,6 +67,20 @@ export class ServerService {
           domain: "",
           uptimeURI: "",
           sshPubKey: "",
+        }))
+      )
+  }
+
+  getAccountAnalyticData(a:string, t: string) : Observable<Options> {
+    return this.http.get<Options>("/api/analytics-json?account="+a+"&type="+t, {headers: this.getHeaders()}).
+      pipe(
+        catchError(this.handleError<Options>('get-analytic-json', {
+          series: [
+            {
+              data: [1, 2, 3],
+              type: "line"
+            }
+          ]
         }))
       )
   }

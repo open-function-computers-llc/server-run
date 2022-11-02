@@ -46,7 +46,7 @@
 
     <iframe class="mt-3" [src]="analyticsPath | safeUrlPipe" *ngIf="showingAnalytics"></iframe>
 
-    <app-line-chart *ngIf="showingChart"></app-line-chart>
+    <app-chart [account]="s.account" *ngIf="showingChart"></app-chart>
 
     <div class="pubkey-viewer mt-3" [class]="{'copying': temporaryCopyAnimationShowing }" (click)="sshPubkeyToClipboard(s.sshPubKey)" *ngIf="showingPubkey">{{ s.sshPubKey }}</div>
 

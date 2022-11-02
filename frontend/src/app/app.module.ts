@@ -26,7 +26,7 @@ import { AddAccountComponent } from './pages/add-account/add-account.component';
 import { TerminateAccountComponent } from './terminate-account/terminate-account.component';
 import { AllDomainsComponent } from './pages/all-domains/all-domains.component';
 import { HighchartsChartModule } from 'highcharts-angular';
-import { LineChartComponent } from './line-chart/line-chart.component';
+import { ChartComponent } from './chart/chart.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +48,7 @@ import { LineChartComponent } from './line-chart/line-chart.component';
     AddAccountComponent,
     TerminateAccountComponent,
     AllDomainsComponent,
-    LineChartComponent,
+    ChartComponent,
   ],
   imports: [
     BrowserModule,
