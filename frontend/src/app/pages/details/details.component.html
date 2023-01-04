@@ -36,17 +36,34 @@
         <option value="">Choose</option>
         <option value="showDomains">View Account Domains</option>
         <option value="analyticChart">View Analytic Chart</option>
-        <option value="analytics-1">View Analytics (Day)</option>
-        <option value="analytics-30">View Analytics (Month)</option>
-        <option value="analytics-all">View Analytics (All Time)</option>
+        <option value="prepareForExport">Export Account</option>
         <option value="showPubKey" *ngIf="s.sshPubKey !== ''">View Account SSH Pubkey</option>
         <option value="" disabled>Dangerous stuff below...</option>
         <option value="terminateAccount">Terminate Account</option>
     </select>
 
-    <iframe class="mt-3" [src]="analyticsPath | safeUrlPipe" *ngIf="showingAnalytics"></iframe>
+    <div *ngIf="showingChart">
+        <div class="d-flex gap-4 mt-3">
+            <div class="align-items-center d-flex gap-1">
+                <input id="chart-type-total-requests" value="total-requests" type="radio" [(ngModel)]="chartType" />
+                <label for="chart-type-total-requests">Total Requests</label>
+            </div>
 
-    <app-chart [account]="s.account" *ngIf="showingChart"></app-chart>
+            <div class="align-items-center d-flex gap-1">
+                <input id="chart-type-unique-visitors" value="unique-visitors" type="radio" [(ngModel)]="chartType" />
+                <label for="chart-type-unique-visitors">Unique Visitors</label>
+            </div>
+
+            <div class="align-items-center d-flex gap-1">
+                <input id="chart-type-bandwidth" value="bandwidth" type="radio" [(ngModel)]="chartType" />
+                <label for="chart-type-bandwidth">Bandwidth</label>
+            </div>
+        </div>
+
+
+
+        <app-chart [account]="s.account" [type]="chartType"></app-chart>
+    </div>
 
     <div class="pubkey-viewer mt-3" [class]="{'copying': temporaryCopyAnimationShowing }" (click)="sshPubkeyToClipboard(s.sshPubKey)" *ngIf="showingPubkey">{{ s.sshPubKey }}</div>
 
@@ -54,6 +71,17 @@
         <h4>Domains on this account:</h4>
         <p>Primary domain: {{ s.domain }}</p>
         <h4>Additional Domains:</h4>
+    </div>
+
+    <div *ngIf="showingExport">
+        <p>This will prepare this account to be imported into another server.</p>
+        <p>That server will need to be part of this pool for the account to show up. When you're sure you're ready to import this account on the new server, click "Importable Accounts" on that new server once this process completes.</p>
+        <button class="btn btn-primary">Export</button>
+
+        <app-script-viewer
+            script-name="export-account"
+            [script-env]="generateExportENV()"
+            ></app-script-viewer>
     </div>
 
     <app-terminate-account

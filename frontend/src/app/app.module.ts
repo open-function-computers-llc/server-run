@@ -27,6 +27,9 @@ import { TerminateAccountComponent } from './terminate-account/terminate-account
 import { AllDomainsComponent } from './pages/all-domains/all-domains.component';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { ChartComponent } from './chart/chart.component';
+import { ImportableAccountsComponentComponent } from './pages/importable-accounts-component/importable-accounts-component.component';
+import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+import { ImportAccountComponentComponent } from './pages/import-account-component/import-account-component.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +52,9 @@ import { ChartComponent } from './chart/chart.component';
     TerminateAccountComponent,
     AllDomainsComponent,
     ChartComponent,
+    ImportableAccountsComponentComponent,
+    SafeHtmlPipe,
+    ImportAccountComponentComponent,
   ],
   imports: [
     BrowserModule,

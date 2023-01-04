@@ -16,10 +16,13 @@ func (s *Server) streamScriptRunner() http.HandlerFunc {
 		"lock":   "ofco-lock-site-production.sh",
 	}
 	availableScriptsWithoutArguments := map[string]string{
-		"f2banstatus": "f2bstatus",
-		"allDomains":  "list-all-domains.sh",
+		"f2banstatus":              "f2bstatus",
+		"allDomains":               "list-all-domains.sh",
+		"list-importable-accounts": "list-accounts-that-can-be-imported.sh",
 	}
 	availableScriptsWithENVRequirements := map[string]string{
+		"export":             "export-account.sh",
+		"import":             "ofco-restore-site-from-backup.sh",
 		"addAccount":         "create-new-account.sh",
 		"cloneAccount":       "clone-wordpress-account.sh",
 		"terminateAccount":   "ofco-delete-account.sh",

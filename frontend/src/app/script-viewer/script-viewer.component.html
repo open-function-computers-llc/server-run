@@ -1,5 +1,15 @@
 <div class="script-output">
-    <ul>
+    <!-- If we have extra stuff per line -->
+    <ul *ngIf="lineAction">
+        <li *ngFor="let m of messages">
+            <div class="d-flex mb-1 align-items-center gap-2" *ngIf="lineAction === 'button'">
+                <button class="btn btn-primary" disabled>{{ lineActionLabel }}</button>
+                <span>{{ m }}</span>
+            </div>
+        </li>
+    </ul>
+
+    <ul *ngIf="!lineAction">
         <li *ngFor="let m of messages">{{ m }}</li>
     </ul>
 </div>

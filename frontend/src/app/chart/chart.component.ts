@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import { Observable, Subscription } from 'rxjs';
 import { ServerService } from '../server.service';
@@ -8,23 +8,58 @@ import { ServerService } from '../server.service';
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.scss']
 })
-export class ChartComponent implements OnInit, OnDestroy {
+export class ChartComponent implements OnInit, OnDestroy, OnChanges {
   Highcharts: typeof Highcharts = Highcharts;
   chartSubscription: Subscription;
-  chartOptions: Highcharts.Options = {
+  defaultChart: Highcharts.Options = {
+    yAxis: {
+      title: {
+        text: ""
+      },
+    },
+    title: {
+      text: ""
+    },
+    legend: {
+      enabled: false
+    },
     series: [{
-      data: [1, 2, 3, 4, 5],
-      type: 'bar'
+      data: [],
+      type: 'column'
     }]
   };
+  chartOptions: Highcharts.Options = this.defaultChart;
   @Input()
   account: string = "default";
+  @Input()
   type: string = "visitors";
 
-  constructor(private serverService: ServerService) { }
+  constructor(private serverService: ServerService) {
+    Highcharts.setOptions({
+      lang: {
+        thousandsSep: ","
+      }
+    });
+  }
 
   ngOnInit(): void {
-    this.chartSubscription = this.serverService.getAccountAnalyticData(this.account, this.type).subscribe((data:Highcharts.Options) => {
+    this.chartOptions = this.defaultChart;
+
+    this.getChartData();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.chartOptions = this.defaultChart;
+
+    if (this.chartSubscription) {
+      this.chartSubscription.unsubscribe();
+    }
+
+    this.getChartData();
+  }
+
+  getChartData(): void {
+    this.chartSubscription = this.serverService.getAccountAnalyticData(this.account, this.type).subscribe((data: Highcharts.Options) => {
       this.chartOptions = data;
     });
   }

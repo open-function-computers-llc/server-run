@@ -1,0 +1,7 @@
+<p>Importing {{ filename }}</p>
+
+<app-script-viewer
+    [script-name]="'import'"
+    [script-env]="generateScriptENV()"
+    (isCompleted)="onScriptCompleted($event)"
+    ></app-script-viewer>

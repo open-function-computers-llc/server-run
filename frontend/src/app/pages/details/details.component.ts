@@ -15,10 +15,11 @@ export class DetailsComponent implements OnInit {
   analyticsView: string = "1";
   domain: string = "";
   analyticsPath: string = "";
-  showingAnalytics: boolean = false;
   showingPubkey: boolean = false;
   showingDomains: boolean = false;
   showingChart: boolean = false;
+  showingExport: boolean = false;
+  chartType: string = "total-requests";
   showingTerminateVerification: boolean = false;
   temporaryCopyAnimationShowing: boolean = false;
 
@@ -43,28 +44,28 @@ export class DetailsComponent implements OnInit {
   setDetailView(e:any) {
     const selectedValue = e.target.value;
     if (selectedValue === "") {
-      this.showingAnalytics = false;
       this.showingDomains = false;
       this.showingPubkey = false;
       this.showingChart = false;
       this.showingTerminateVerification = false;
+      this.showingExport = false;
       return;
     }
 
     if (selectedValue === 'showPubKey') {
       this.showingPubkey = true;
-      this.showingAnalytics = false;
       this.showingDomains = false;
       this.showingChart = false;
+      this.showingExport = false;
       this.showingTerminateVerification = false;
       return;
     }
 
     if (selectedValue === "terminateAccount") {
-      this.showingAnalytics = false;
       this.showingPubkey = false;
       this.showingDomains = false;
       this.showingChart = false;
+      this.showingExport = false;
       this.showingTerminateVerification = true;
       return;
     }
@@ -72,8 +73,8 @@ export class DetailsComponent implements OnInit {
     if (selectedValue === 'showDomains') {
       this.showingDomains = true;
       this.showingPubkey = false;
-      this.showingAnalytics = false;
       this.showingChart = false;
+      this.showingExport = false;
       this.showingTerminateVerification = false;
       return;
     }
@@ -81,19 +82,20 @@ export class DetailsComponent implements OnInit {
     if (selectedValue === 'analyticChart') {
       this.showingDomains = false;
       this.showingPubkey = false;
-      this.showingAnalytics = false;
       this.showingChart = true;
+      this.showingExport = false;
       this.showingTerminateVerification = false;
       return;
     }
 
-    this.showingAnalytics = true;
-    this.showingPubkey = false;
-    this.showingDomains = false;
-    this.showingChart = false;
-    this.showingTerminateVerification = false;
-    this.analyticsView = selectedValue.substr(10);
-    this.setAnalyticsURL();
+    if (selectedValue === 'prepareForExport') {
+      this.showingDomains = false;
+      this.showingPubkey = false;
+      this.showingChart = false;
+      this.showingExport = true;
+      this.showingTerminateVerification = false;
+      return;
+    }
   }
 
   sshPubkeyToClipboard(key:string) {
@@ -114,5 +116,9 @@ export class DetailsComponent implements OnInit {
 
   cloneAccount() {
     this.router.navigate(["..", "clone", this.domain], { relativeTo: this.route });
+  }
+
+  generateExportENV(): string {
+    return `ACCOUNT_NAME=${this.domain}`; // TODO: update "domain" to "account" pretty much everywhere
   }
 }

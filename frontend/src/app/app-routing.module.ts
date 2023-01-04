@@ -12,6 +12,8 @@ import { BoostrapComponent } from './boostrap/boostrap.component';
 import { FailToBanComponent } from './pages/fail-to-ban/fail-to-ban.component';
 import { AddAccountComponent } from './pages/add-account/add-account.component';
 import { AllDomainsComponent } from './pages/all-domains/all-domains.component';
+import { ImportableAccountsComponentComponent } from './pages/importable-accounts-component/importable-accounts-component.component';
+import { ImportAccountComponentComponent } from './pages/import-account-component/import-account-component.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -21,10 +23,12 @@ const routes: Routes = [
     { path: 'accounts', component: SitesComponent },
     { path: 'accounts/add', component: AddAccountComponent },
     { path: 'accounts/clone/:domain', component: AddAccountComponent },
+    { path: 'accounts/import/:filename', component: ImportAccountComponentComponent },
     { path: 'accounts/:domain', component: DetailsComponent },
     { path: 'accounts/:domain/process/:action', component: ProcessComponent },
     { path: 'f2ban/status', component: FailToBanComponent },
     { path: 'all-domains', component: AllDomainsComponent },
+    { path: 'show-importable-accounts', component: ImportableAccountsComponentComponent },
   ]},
   { path: '**', component: ErrorComponent },
 ];

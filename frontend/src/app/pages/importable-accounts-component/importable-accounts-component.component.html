@@ -1,0 +1,12 @@
+<h2>Importable Accounts</h2>
+<app-script-viewer
+    script-name="list-importable-accounts"
+    line-action="button"
+    line-action-label="Import"
+    line-method="importAccount"
+    (isCompleted)="onScriptCompleted($event)"
+    ></app-script-viewer>
+
+<div *ngIf="listedAllAccounts">
+    <!-- want to show something when it's done? -->
+</div>
