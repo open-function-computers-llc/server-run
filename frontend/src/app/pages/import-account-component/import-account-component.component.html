@@ -5,3 +5,8 @@
     [script-env]="generateScriptENV()"
     (isCompleted)="onScriptCompleted($event)"
     ></app-script-viewer>
+
+<div *ngIf="isComplete">
+    <p>All done!</p>
+    <button class="btn btn-primary" (click)="navigateToAccounts()">Accounts</button>
+</div>

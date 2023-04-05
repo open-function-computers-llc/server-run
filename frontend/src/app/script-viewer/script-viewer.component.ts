@@ -1,7 +1,9 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { WebSocketSubject } from 'rxjs/webSocket';
+import { ScriptMessage } from '../ScriptMessage';
 import { ServerService } from '../server.service';
 
 @Component({
@@ -16,8 +18,10 @@ export class ScriptViewerComponent implements OnInit {
   @Input('line-action') lineAction: string = "";
   @Input('line-action-label') lineActionLabel: string = "";
   @Input('line-method') lineMethod: string = "";
+  @Input('rerunable') showRerunButton: boolean = false;
   @Output() isCompleted: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+  scriptObservable: WebSocketSubject<ScriptMessage>;
   scriptOutput: Subscription;
   messages: string[] = [];
   isComplete: boolean = false;
@@ -33,7 +37,12 @@ export class ScriptViewerComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.scriptName, this.scriptEnv, this.scriptArg);
     const arg = this.scriptArg.split(" ").join("-");
-    this.scriptOutput = this.serverService.streamScriptProcess(this.scriptName, arg, this.scriptEnv).subscribe(
+    this.scriptObservable = this.serverService.streamScriptProcess(this.scriptName, arg, this.scriptEnv);
+    this.run();
+  }
+
+  run() {
+    this.scriptOutput = this.scriptObservable.subscribe(
       (o) => {
         this.messages.push(o.output);
       },
@@ -46,6 +55,12 @@ export class ScriptViewerComponent implements OnInit {
         this.bindButtons();
       }
     );
+  }
+
+  rerun() {
+    console.log("rerun!");
+    this.messages = [];
+    this.run();
   }
 
   buttonClicked(e:any) {

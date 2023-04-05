@@ -14,6 +14,9 @@ func (s *Server) bindRoutes() {
 		"analytics-json":  s.handleAnalyticsJSON(),
 		"uptime":          s.handleUptimeInfo(),
 		"uptime-provider": s.handleUptimeDetails(),
+		"process-list":    s.handleSystemProcesses(),
+		"process-details": s.handleSystemDetails(),
+		"process-restart": s.handleSystemRestart(),
 	}
 	for path, handler := range protectedRoutes {
 		http.Handle("/api/"+path, s.LogRequest(s.ProtectRequest(handler)))

@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class ImportAccountComponentComponent implements OnInit {
   filename: string = "";
+  isComplete: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -25,6 +26,10 @@ export class ImportAccountComponentComponent implements OnInit {
 
   onScriptCompleted(e:boolean) {
     console.log("completed!", e);
+    this.isComplete = true;
+  }
+
+  navigateToAccounts() {
     this.router.navigate(["/system/accounts"]);
   }
 }

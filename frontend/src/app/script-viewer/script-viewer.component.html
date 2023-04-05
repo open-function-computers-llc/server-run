@@ -1,4 +1,5 @@
 <div class="script-output">
+    <button *ngIf="showRerunButton" (click)="rerun()">Run Again</button>
     <!-- If we have extra stuff per line -->
     <ul *ngIf="lineAction">
         <li *ngFor="let m of messages">

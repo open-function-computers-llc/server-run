@@ -19,6 +19,7 @@ type Site struct {
 	AlternateDomains          []string `json:"alternateDomains"`
 	AlwaysUnlockedDirectories []string `json:"alwaysUnlockedDirectories"`
 	PubKey                    string   `json:"sshPubKey"`
+	CreatedAt                 string   `json:"createdAt`
 }
 
 func New(account string) (Site, error) {

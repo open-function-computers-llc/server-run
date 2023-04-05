@@ -8,29 +8,36 @@ import { Website } from 'src/app/Website';
 @Component({
   selector: 'app-details',
   templateUrl: './details.component.html',
-  styleUrls: ['./details.component.scss']
+  styleUrls: ['./details.component.scss'],
 })
 export class DetailsComponent implements OnInit {
   site: Observable<Website>;
-  analyticsView: string = "1";
-  domain: string = "";
-  analyticsPath: string = "";
+  analyticsView: string = '1';
+  domain: string = '';
+  linkURL: string = '';
+  analyticsPath: string = '';
+  showingDomains: boolean = true;
   showingPubkey: boolean = false;
-  showingDomains: boolean = false;
   showingChart: boolean = false;
   showingExport: boolean = false;
-  chartType: string = "total-requests";
+  monitorLogs: boolean = false;
+  chartType: string = 'total-requests';
   showingTerminateVerification: boolean = false;
   temporaryCopyAnimationShowing: boolean = false;
+  isAddingDomain: boolean = false;
+  addDomainNow: boolean = false;
+  newDomain: string = '';
 
   constructor(
     private serverService: ServerService,
     private route: ActivatedRoute,
-    private router: Router,
-  ) { }
+    private router: Router
+  ) {
+    this.linkURL = 'https://' + this.domain;
+  }
 
   ngOnInit(): void {
-    const domain:string = this.route.snapshot.paramMap.get("domain") || "";
+    const domain: string = this.route.snapshot.paramMap.get('domain') || '';
     this.domain = domain;
     this.site = this.serverService.getSiteDetails(domain);
     this.setAnalyticsURL();
@@ -38,17 +45,24 @@ export class DetailsComponent implements OnInit {
 
   setAnalyticsURL() {
     const token = this.serverService.getToken();
-    this.analyticsPath = "/api/analytics?domain=" + this.domain + "&period=" + this.analyticsView + "&token=" + token;
+    this.analyticsPath =
+      '/api/analytics?domain=' +
+      this.domain +
+      '&period=' +
+      this.analyticsView +
+      '&token=' +
+      token;
   }
 
-  setDetailView(e:any) {
+  setDetailView(e: any) {
     const selectedValue = e.target.value;
-    if (selectedValue === "") {
+    if (selectedValue === '') {
       this.showingDomains = false;
       this.showingPubkey = false;
       this.showingChart = false;
       this.showingTerminateVerification = false;
       this.showingExport = false;
+      this.monitorLogs = false;
       return;
     }
 
@@ -58,15 +72,17 @@ export class DetailsComponent implements OnInit {
       this.showingChart = false;
       this.showingExport = false;
       this.showingTerminateVerification = false;
+      this.monitorLogs = false;
       return;
     }
 
-    if (selectedValue === "terminateAccount") {
+    if (selectedValue === 'terminateAccount') {
       this.showingPubkey = false;
       this.showingDomains = false;
       this.showingChart = false;
       this.showingExport = false;
       this.showingTerminateVerification = true;
+      this.monitorLogs = false;
       return;
     }
 
@@ -76,6 +92,7 @@ export class DetailsComponent implements OnInit {
       this.showingChart = false;
       this.showingExport = false;
       this.showingTerminateVerification = false;
+      this.monitorLogs = false;
       return;
     }
 
@@ -85,6 +102,7 @@ export class DetailsComponent implements OnInit {
       this.showingChart = true;
       this.showingExport = false;
       this.showingTerminateVerification = false;
+      this.monitorLogs = false;
       return;
     }
 
@@ -94,16 +112,37 @@ export class DetailsComponent implements OnInit {
       this.showingChart = false;
       this.showingExport = true;
       this.showingTerminateVerification = false;
+      this.monitorLogs = false;
+      return;
+    }
+
+    if (selectedValue === 'monitorLogs') {
+      this.showingDomains = false;
+      this.showingPubkey = false;
+      this.showingChart = false;
+      this.showingExport = false;
+      this.showingTerminateVerification = false;
+      this.monitorLogs = true;
       return;
     }
   }
 
-  sshPubkeyToClipboard(key:string) {
+  sshPubkeyToClipboard(key: string) {
     navigator.clipboard.writeText(key);
     this.temporaryCopyAnimationShowing = true;
     setTimeout(() => {
       this.temporaryCopyAnimationShowing = false;
     }, 1000);
+  }
+
+  generateLogArgs(type: string) {
+    if (type === 'access') {
+      return '-n|20|/var/log/httpd/' + this.domain + '_access.log';
+    }
+    if (type === 'error') {
+      return '-n|20|/var/log/httpd/' + this.domain + '_error.log';
+    }
+    return 'INVALID FILE TYPE';
   }
 
   unlockSite() {
@@ -115,7 +154,43 @@ export class DetailsComponent implements OnInit {
   }
 
   cloneAccount() {
-    this.router.navigate(["..", "clone", this.domain], { relativeTo: this.route });
+    this.router.navigate(['..', 'clone', this.domain], {
+      relativeTo: this.route,
+    });
+  }
+
+  exportAccount() {
+    this.router.navigate(['..', 'export', this.domain], {
+      relativeTo: this.route,
+    });
+  }
+
+  deleteAlternateDomain(domain: string) {
+    console.log('delete: ' + domain);
+  }
+
+  setAsPrimaryDomain(domain: string) {
+    console.log('set to primary: ' + domain);
+  }
+
+  toggleIsAddingDomain() {
+    this.isAddingDomain = !this.isAddingDomain;
+  }
+
+  addDomain() {
+    console.log('adding ' + this.newDomain);
+    this.addDomainNow = true;
+  }
+
+  onFinishedAddingDomain(e: boolean): void {
+    this.isAddingDomain = false;
+    this.newDomain = '';
+    window.location.reload();
+    // this.addDomainNow = false;
+  }
+
+  generateAddDomainENV(): string {
+    return `ACCOUNT=${this.domain}|DOMAIN=${this.newDomain}`;
   }
 
   generateExportENV(): string {

@@ -14,6 +14,9 @@ import { AddAccountComponent } from './pages/add-account/add-account.component';
 import { AllDomainsComponent } from './pages/all-domains/all-domains.component';
 import { ImportableAccountsComponentComponent } from './pages/importable-accounts-component/importable-accounts-component.component';
 import { ImportAccountComponentComponent } from './pages/import-account-component/import-account-component.component';
+import { ExportAccountComponent } from './pages/export-account/export-account.component';
+import { ServiceListComponent } from './pages/service-list/service-list.component';
+import { ServiceDetailsComponent } from './pages/service-details/service-details.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -23,12 +26,15 @@ const routes: Routes = [
     { path: 'accounts', component: SitesComponent },
     { path: 'accounts/add', component: AddAccountComponent },
     { path: 'accounts/clone/:domain', component: AddAccountComponent },
+    { path: 'accounts/export/:domain', component: ExportAccountComponent },
     { path: 'accounts/import/:filename', component: ImportAccountComponentComponent },
     { path: 'accounts/:domain', component: DetailsComponent },
     { path: 'accounts/:domain/process/:action', component: ProcessComponent },
     { path: 'f2ban/status', component: FailToBanComponent },
     { path: 'all-domains', component: AllDomainsComponent },
     { path: 'show-importable-accounts', component: ImportableAccountsComponentComponent },
+    { path: 'service-list', component: ServiceListComponent },
+    { path: 'service/:name', component: ServiceDetailsComponent },
   ]},
   { path: '**', component: ErrorComponent },
 ];

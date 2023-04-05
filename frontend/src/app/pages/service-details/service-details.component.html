@@ -1,0 +1,7 @@
+<ng-container *ngIf="service | async as s">
+    <div class="d-flex justify-content-between">
+        <h2>{{ s.name }}</h2>
+        <button class="btn btn-danger" (click)="restartService()">Restart</button>
+    </div>
+    <pre>{{ s.status }}</pre>
+</ng-container>

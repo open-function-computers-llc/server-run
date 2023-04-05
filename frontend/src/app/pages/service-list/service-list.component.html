@@ -1,0 +1,12 @@
+<h2>System Services</h2>
+
+
+<div class="row">
+    <div class="col-md-4">
+        <ul class="list-group">
+            <li *ngFor="let s of services | async;" class="list-group-item d-flex" [class]="{ 'list-group-item-success': s.isActive, 'list-group-item-danger': !s.isActive }">
+                <a routerLink="/system/service/{{ s.name }}">{{ s.name }}</a>
+            </li>
+        </ul>
+    </div>
+</div>

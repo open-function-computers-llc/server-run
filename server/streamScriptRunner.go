@@ -12,8 +12,9 @@ import (
 
 func (s *Server) streamScriptRunner() http.HandlerFunc {
 	availableScriptsWithArguments := map[string]string{
-		"unlock": "ofco-unlock-site.sh",
-		"lock":   "ofco-lock-site-production.sh",
+		"unlock":     "ofco-unlock-site.sh",
+		"lock":       "ofco-lock-site-production.sh",
+		"log-viewer": "ofco-stream-file.sh",
 	}
 	availableScriptsWithoutArguments := map[string]string{
 		"f2banstatus":              "f2bstatus",
@@ -84,11 +85,12 @@ func (s *Server) streamScriptRunner() http.HandlerFunc {
 		var cmd *exec.Cmd
 
 		// 3 ways to run a script!
-
-		// option 1 - the script has a single argument
+		// option 1 - the script has arguments that need to be turned from | into individual args
 		if _, ok := availableScriptsWithArguments[script]; ok {
 			d := r.FormValue("arg")
-			cmd = exec.Command(s.scriptsRoot+availableScriptsWithArguments[script], d)
+			args := strings.Split(d, "|")
+			s.logger.Info(args)
+			cmd = exec.Command(s.scriptsRoot+availableScriptsWithArguments[script], args...)
 		}
 
 		// option 2 - the script has zero arguments and nothing special in the ENV
@@ -110,7 +112,13 @@ func (s *Server) streamScriptRunner() http.HandlerFunc {
 			e := r.FormValue("env")
 			envPairs := strings.Split(e, "|")
 			for _, env := range envPairs {
-				cmd.Env = append(cmd.Env, s.sanitizeEnv(env))
+
+				// skip the env sanitizer for certain scripts... not cool!
+				if script == "import" || script == "addDomainToAccount" {
+					cmd.Env = append(cmd.Env, env)
+				} else {
+					cmd.Env = append(cmd.Env, s.sanitizeEnv(env))
+				}
 			}
 			s.logger.Info("Running: ", s.scriptsRoot+availableScriptsWithENVRequirements[script])
 			s.logger.Info("Script ENV: ", cmd.Env)
@@ -128,6 +136,17 @@ func (s *Server) streamScriptRunner() http.HandlerFunc {
 				commChannel <- line
 			}
 			close(commChannel)
+		}()
+
+		go func() {
+			s.logger.Info("i am watching for incoming messages from the angualr app")
+			_, messageBytes, _ := c.Read(r.Context())
+			var message map[string]string
+			json.Unmarshal(messageBytes, &message)
+			if message["output"] == "terminate" {
+				c.Close(websocket.StatusNormalClosure, "")
+				cmd.Process.Kill()
+			}
 		}()
 
 		err = cmd.Start()

@@ -1,0 +1,8 @@
+<h1>Exporting account</h1>
+<app-script-viewer
+    [script-name]="'export'"
+    [script-env]="generateScriptENV()"
+    (isCompleted)="onScriptCompleted($event)"
+    ></app-script-viewer>
+
+<div *ngIf="exportCompleted">Woo hoo bro!</div>

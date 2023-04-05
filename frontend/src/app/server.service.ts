@@ -4,10 +4,11 @@ import { SystemLoad } from './SystemLoad';
 import { interval, Observable, of } from 'rxjs';
 import { catchError, mergeMap } from 'rxjs/operators';
 import { Website } from './Website';
-import { webSocket } from "rxjs/webSocket";
+import { webSocket, WebSocketSubject } from "rxjs/webSocket";
 import { ScriptMessage } from './ScriptMessage';
 import { AuthService } from './auth/auth.service';
 import { Options } from 'highcharts';
+import { SystemService } from './SystemService';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +37,7 @@ export class ServerService {
     return subject;
   }
 
-  streamScriptProcess(script: string, arg?: string, env?: string) : Observable<ScriptMessage> {
+  streamScriptProcess(script: string, arg?: string, env?: string) : WebSocketSubject<ScriptMessage> {
     // build script path
     let path = window.location.href.split('/').slice(0, 3).join('/') + "/";
     path = path.replace("http", "ws");
@@ -54,6 +55,30 @@ export class ServerService {
     return this.http.get<Website[]>("/api/sites", {headers: this.getHeaders()}).
       pipe(
         catchError(this.handleError<Website[]>('get-sites', []))
+      )
+  }
+
+  restartService(s:String) {
+    return this.http.get("/api/process-restart?service="+s, {headers: this.getHeaders()}).toPromise().then(message => {
+      console.log(message);
+    });
+  }
+
+  getServiceDetails(s:String) : Observable<SystemService> {
+    return this.http.get<SystemService>("/api/process-details?service="+s, {headers: this.getHeaders()}).
+      pipe(
+        catchError(this.handleError<SystemService>('get-system-service', {
+          name: 'fake-service',
+          isActive: false,
+          status: ""
+        }))
+      )
+  }
+
+  getSystemServiceStatuses() : Observable<SystemService[]> {
+    return this.http.get<SystemService[]>("/api/process-list", {headers: this.getHeaders()}).
+      pipe(
+        catchError(this.handleError<SystemService[]>('get-system-services', []))
       )
   }
 

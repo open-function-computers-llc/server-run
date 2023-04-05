@@ -30,6 +30,9 @@ import { ChartComponent } from './chart/chart.component';
 import { ImportableAccountsComponentComponent } from './pages/importable-accounts-component/importable-accounts-component.component';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { ImportAccountComponentComponent } from './pages/import-account-component/import-account-component.component';
+import { ExportAccountComponent } from './pages/export-account/export-account.component';
+import { ServiceListComponent } from './pages/service-list/service-list.component';
+import { ServiceDetailsComponent } from './pages/service-details/service-details.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +58,9 @@ import { ImportAccountComponentComponent } from './pages/import-account-componen
     ImportableAccountsComponentComponent,
     SafeHtmlPipe,
     ImportAccountComponentComponent,
+    ExportAccountComponent,
+    ServiceListComponent,
+    ServiceDetailsComponent,
   ],
   imports: [
     BrowserModule,
