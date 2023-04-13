@@ -28,6 +28,7 @@ func (s *Server) streamScriptRunner() http.HandlerFunc {
 		"cloneAccount":       "clone-wordpress-account.sh",
 		"terminateAccount":   "ofco-delete-account.sh",
 		"addDomainToAccount": "add-domain-to-account.sh",
+		"unban-ip":           "unban-ip.sh",
 	}
 
 	// combine the above
@@ -114,7 +115,7 @@ func (s *Server) streamScriptRunner() http.HandlerFunc {
 			for _, env := range envPairs {
 
 				// skip the env sanitizer for certain scripts... not cool!
-				if script == "import" || script == "addDomainToAccount" {
+				if script == "import" || script == "addDomainToAccount" || script == "unban-ip" {
 					cmd.Env = append(cmd.Env, env)
 				} else {
 					cmd.Env = append(cmd.Env, s.sanitizeEnv(env))

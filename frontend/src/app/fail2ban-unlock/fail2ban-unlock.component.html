@@ -1,0 +1,20 @@
+<h3>Unlock an IP Address:</h3>
+<div class="input-group">
+  <span class="input-group-text" id="ip-address">IP Address</span>
+  <input
+    type="text"
+    class="form-control"
+    placeholder="0.0.0.0"
+    autofocus
+    [(ngModel)]="ipAddress"
+    (keydown.enter)="unban()"
+  />
+  <button class="btn btn-success" (click)="unban()">Unban</button>
+</div>
+
+<div *ngIf="isUnbanning">
+  <app-script-viewer
+    script-name="unban-ip"
+    [script-env]="generateUnbanENV()"
+  ></app-script-viewer>
+</div>

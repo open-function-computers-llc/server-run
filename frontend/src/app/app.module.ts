@@ -33,6 +33,7 @@ import { ImportAccountComponentComponent } from './pages/import-account-componen
 import { ExportAccountComponent } from './pages/export-account/export-account.component';
 import { ServiceListComponent } from './pages/service-list/service-list.component';
 import { ServiceDetailsComponent } from './pages/service-details/service-details.component';
+import { Fail2banUnlockComponent } from './fail2ban-unlock/fail2ban-unlock.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { ServiceDetailsComponent } from './pages/service-details/service-details
     ExportAccountComponent,
     ServiceListComponent,
     ServiceDetailsComponent,
+    Fail2banUnlockComponent,
   ],
   imports: [
     BrowserModule,

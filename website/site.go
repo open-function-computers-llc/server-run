@@ -19,7 +19,7 @@ type Site struct {
 	AlternateDomains          []string `json:"alternateDomains"`
 	AlwaysUnlockedDirectories []string `json:"alwaysUnlockedDirectories"`
 	PubKey                    string   `json:"sshPubKey"`
-	CreatedAt                 string   `json:"createdAt`
+	CreatedAt                 string   `json:"createdAt"`
 }
 
 func New(account string) (Site, error) {
@@ -78,7 +78,7 @@ func (s *Site) hydrateSSHPubKey() {
 
 func (s *Site) verifyStateFileExists() {
 	// check folder
-	_, err := os.Stat(s.stateFolder())
+	folder, err := os.Stat(s.stateFolder())
 	if err != nil {
 		os.Mkdir(s.stateFolder(), 0755)
 	}
@@ -90,6 +90,7 @@ func (s *Site) verifyStateFileExists() {
 			os.Getenv("WEBSITES_ROOT") + s.Account + "/uploads", // uploads directory is always flagged as g2g
 		}
 		s.Username = s.Account
+		s.CreatedAt = folder.ModTime().Format("2006-01-02T15:04:05Z07:00")
 
 		// TODO: juggle the different server types to hydrate the default unlocked directories
 

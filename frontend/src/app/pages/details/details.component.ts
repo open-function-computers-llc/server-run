@@ -196,4 +196,8 @@ export class DetailsComponent implements OnInit {
   generateExportENV(): string {
     return `ACCOUNT_NAME=${this.domain}`; // TODO: update "domain" to "account" pretty much everywhere
   }
+
+  created(ts: string): string {
+    return new Date(ts).toDateString();
+  }
 }
