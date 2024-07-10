@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"fmt"
 	"io/fs"
 	"log"
 	"os"
@@ -45,6 +46,45 @@ func main() {
 			},
 		},
 		{
+			Name:    "list",
+			Aliases: []string{"l"},
+			Usage:   "Display some information from the account settings file",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:     "account",
+					Usage:    "Account you're updating manually (required)",
+					Required: true,
+				},
+				cli.StringFlag{
+					Name:     "setting",
+					Usage:    "The setting you are tring to see (required)",
+					Required: true,
+				},
+			},
+			Action: func(c *cli.Context) error {
+				return commands.ListSetting(c)
+			},
+		},
+		{
+			Name:    "set-env",
+			Aliases: []string{"env"},
+			Usage:   "Populate the system ENV for use in scripts",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:     "account",
+					Usage:    "Account you're updating manually (required)",
+					Required: true,
+				},
+				cli.StringFlag{
+					Name:  "database",
+					Usage: "Populate DBUSER DBHOST DBPASSWORD DBNAME for a given database",
+				},
+			},
+			Action: func(c *cli.Context) error {
+				return commands.SetEnv(c)
+			},
+		},
+		{
 			Name:    "update",
 			Aliases: []string{"u"},
 			Usage:   "Update a specific account's settings file",
@@ -70,6 +110,26 @@ func main() {
 					Name:  "remove-domain",
 					Usage: "Remove a domain from the selected account",
 				},
+				cli.StringFlag{
+					Name:  "add-database",
+					Usage: "Add a database to the selected account",
+				},
+				cli.StringFlag{
+					Name:  "db-user",
+					Usage: "Username when calling \"add-database\"",
+				},
+				cli.StringFlag{
+					Name:  "db-name",
+					Usage: "Database name when calling \"add-database\"",
+				},
+				cli.StringFlag{
+					Name:  "db-host",
+					Usage: "Database host when calling \"add-database\"",
+				},
+				cli.StringFlag{
+					Name:  "db-password",
+					Usage: "Password when calling \"add-database\"",
+				},
 			},
 			Action: func(c *cli.Context) error {
 				return commands.Update(c)
@@ -87,11 +147,13 @@ func startServer() error {
 	// static assets for Angular app
 	stripped, err := fs.Sub(frontend, "frontend/dist/frontend")
 	if err != nil {
+		fmt.Println("error getting bundle")
 		return err
 	}
 
 	s, err := server.New(stripped)
 	if err != nil {
+		fmt.Println("error getting server")
 		return err
 	}
 	return s.Serve()

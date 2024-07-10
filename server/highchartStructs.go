@@ -32,6 +32,16 @@ type chartJson struct {
 	Title  chartTitle    `json:"title"`
 	Legend chartLegend   `json:"legend"`
 }
+type thirdPartyAnalyticsJSON struct {
+	Values   []float64 `json:"values"`
+	Min      float64   `json:"min"`
+	Max      float64   `json:"max"`
+	Start    string    `json:"start"`
+	End      string    `json:"end"`
+	Average  float64   `json:"average"`
+	Total    float64   `json:"total"`
+	Duration int       `json:"duration"`
+}
 
 type processedChartData struct {
 	outputValues     []float64

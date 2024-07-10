@@ -1,6 +1,6 @@
 module github.com/open-function-computers-llc/server-run
 
-go 1.17
+go 1.21
 
 require (
 	github.com/dchest/uniuri v0.0.0-20200228104902-7aecb25e1fe5

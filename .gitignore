@@ -1,4 +1,3 @@
 .env
 deployToPlay.sh
-logo-ofc.png
-logo-vogey.png
+logo-*.png

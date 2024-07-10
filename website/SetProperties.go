@@ -39,6 +39,18 @@ func (ws *Site) AddAlternateDomain(d string) error {
 	return ws.saveStateFile()
 }
 
+func (ws *Site) AddDatabase(user, name, host, password string) error {
+	db := Database{
+		Name:     name,
+		Username: user,
+		Host:     host,
+		Password: password,
+	}
+
+	ws.Databases = append(ws.Databases, db)
+	return ws.saveStateFile()
+}
+
 func (ws *Site) RemoveAlternateDomain(d string) error {
 	d = strings.TrimSpace(d) // trim it down
 

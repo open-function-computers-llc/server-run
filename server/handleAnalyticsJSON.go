@@ -106,7 +106,7 @@ func processAnalyticDataForAccount(account string, dataToFetch string) (processe
 				chartData.seriesName = "Requests"
 			}
 
-			if dataToFetch == "unique-visitors" {
+			if dataToFetch == "unique-visitors" || dataToFetch == "visitors" {
 				chartData.outputValues = append(chartData.outputValues, float64(reportJSON.General.UniqueVisitors))
 				chartData.title = "Unique Visitors"
 				chartData.seriesName = "Visitors"

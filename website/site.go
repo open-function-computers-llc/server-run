@@ -11,15 +11,16 @@ import (
 var stateFilename = "settings.json"
 
 type Site struct {
-	IsLocked                  bool     `json:"isLocked"`
-	Account                   string   `json:"account"`
-	UptimeURI                 string   `json:"uptimeURI"`
-	Username                  string   `json:"username"`
-	PrimaryDomain             string   `json:"domain"`
-	AlternateDomains          []string `json:"alternateDomains"`
-	AlwaysUnlockedDirectories []string `json:"alwaysUnlockedDirectories"`
-	PubKey                    string   `json:"sshPubKey"`
-	CreatedAt                 string   `json:"createdAt"`
+	IsLocked                  bool       `json:"isLocked"`
+	Account                   string     `json:"account"`
+	UptimeURI                 string     `json:"uptimeURI"`
+	Username                  string     `json:"username"`
+	PrimaryDomain             string     `json:"domain"`
+	AlternateDomains          []string   `json:"alternateDomains"`
+	AlwaysUnlockedDirectories []string   `json:"alwaysUnlockedDirectories"`
+	Databases                 []Database `json:"databases"`
+	PubKey                    string     `json:"sshPubKey"`
+	CreatedAt                 string     `json:"createdAt"`
 }
 
 func New(account string) (Site, error) {

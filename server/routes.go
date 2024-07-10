@@ -39,6 +39,14 @@ func (s *Server) bindRoutes() {
 		http.Handle("/api/"+path, s.LogRequest(handler))
 	}
 
+	// external api access for report generator or other 3rd party access
+	thirdPartyAccess := map[string]http.HandlerFunc{
+		"analytics": s.handleThirdPartyAnalyticsJSON(),
+	}
+	for path, handler := range thirdPartyAccess {
+		http.Handle("/external-access/"+path, s.LogRequest(s.thirdPartyProtection(handler)))
+	}
+
 	// filesystem server for angular app
 	frontendFS := http.FileServer(http.FS(s.filesystem))
 	http.Handle("/", frontendFS)

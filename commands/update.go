@@ -41,5 +41,25 @@ func Update(c *cli.Context) error {
 	if c.String("remove-domain") != "" {
 		return site.RemoveAlternateDomain(c.String("remove-domain"))
 	}
+
+	if c.String("add-database") != "" {
+		otherRequiredStrings := []string{
+			"db-user",
+			"db-name",
+			"db-host",
+			"db-password",
+		}
+		for _, s := range otherRequiredStrings {
+			if c.String(s) == "" {
+				return errors.New(s + " is also required when calling \"add-database\"")
+			}
+		}
+		return site.AddDatabase(
+			c.String("db-user"),
+			c.String("db-name"),
+			c.String("db-host"),
+			c.String("db-password"),
+		)
+	}
 	return errors.New("WARNING: No update command was ran!")
 }
